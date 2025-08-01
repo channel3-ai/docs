@@ -8,20 +8,19 @@
     "dark": "#5D3FD3"
   },
   "favicon": "/favicon.svg",
+
+  "contextual": {
+    "options": ["copy", "view", "chatgpt", "claude", "cursor"]
+  },
   "navigation": {
     "groups": [
       {
         "group": "Get Started",
-        "pages": [
-          "index",
-          "core-concepts"
-        ]
+        "pages": ["index", "core-concepts"]
       },
       {
         "group": "MCP",
-        "pages": [
-          "mcp-overview"
-        ]
+        "pages": ["mcp-overview"]
       },
       {
         "group": "API",
@@ -34,10 +33,7 @@
       },
       {
         "group": "SDK",
-        "pages": [
-          "python-sdk",
-          "typescript-sdk"
-        ]
+        "pages": ["python-sdk", "typescript-sdk"]
       }
     ]
   },
