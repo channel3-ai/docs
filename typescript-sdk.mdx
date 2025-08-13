@@ -1,11 +1,11 @@
 ---
-title: 'TypeScript/JavaScript SDK Quickstart'
-description: "This guide will help you install, set up, and use the SDK to integrate Channel3's product search capabilities into your web and Node.js applications."
+title: "TypeScript SDK Quickstart"
+description: "Get started with the Channel3 TypeScript SDK to search and retrieve product information."
 ---
 
 ## Installation
 
-You can install the Channel3 SDK using your favorite JavaScript package manager: npm, Yarn, or pnpm.
+You can install the Channel3 SDK using your favorite package manager: npm, Yarn, or pnpm.
 
 <CodeGroup>
 ```bash npm
@@ -19,8 +19,8 @@ yarn add channel3-sdk
 ```bash pnpm
 pnpm add channel3-sdk
 ```
-</CodeGroup>
 
+</CodeGroup>
 
 ## Authentication
 
@@ -28,7 +28,11 @@ pnpm add channel3-sdk
 
 You'll need an API key to authenticate your requests to the Channel3 API.
 
-<Card title="Generate Your API Key" icon="key" href="https://trychannel3.com/dashboard/api">
+<Card
+  title="Generate Your API Key"
+  icon="key"
+  href="https://trychannel3.com/dashboard/api"
+>
   Grab your API key from your Channel3 dashboard if you haven't already.
 </Card>
 
@@ -41,13 +45,12 @@ You have two main ways to provide your API key:
 1. **Directly in Configuration:** Pass it in the `apiKey` field when creating the client.
 2. **Environment Variable:** If `CHANNEL3_API_KEY` is set in your Node.js environment (`process.env.CHANNEL3_API_KEY`), the client can automatically pick it up.
 
-
 ```typescript
-import { Channel3Client } from 'channel3-sdk';
+import { Channel3Client } from "channel3-sdk";
 
 // Option 1: Initialize with explicit API key (common for browsers or specific setups)
 const client = new Channel3Client({
-  apiKey: "your_api_key_here"
+  apiKey: "your_api_key_here",
 });
 
 // Option 2: Initialize using environment variable (common for Node.js)
@@ -63,7 +66,9 @@ const customClient = new Channel3Client({
 ```
 
 <Warning>
-  All methods on the `Channel3Client` (like `search` and `getProduct`) are asynchronous and return Promises. You'll need to use `async/await` or `.then()/.catch()` to work with the results.
+  All methods on the `Channel3Client` (like `search` and `getProduct`) are
+  asynchronous and return Promises. You'll need to use `async/await` or
+  `.then()/.catch()` to work with the results.
 </Warning>
 
 ## Search
@@ -73,24 +78,26 @@ const customClient = new Channel3Client({
 Search for products using natural language queries.
 
 ```typescript
-import { Channel3Client, Product } from 'channel3-sdk';
+import { Channel3Client, Product } from "channel3-sdk";
 
 const client = new Channel3Client({ apiKey: "your_api_key_here" });
 
 async function textSearch() {
   try {
-    const products: Product[] = await client.search({ 
-      query: "minimalist desk lamp" 
+    const products: Product[] = await client.search({
+      query: "minimalist desk lamp",
     });
 
     if (products.length > 0) {
       console.log(`Found ${products.length} products:`);
-      products.slice(0, 3).forEach(product => {
+      products.slice(0, 3).forEach((product) => {
         console.log(`- ${product.title}`);
         console.log(`  Brand: ${product.brand_name}`);
         console.log(`  Score: ${product.score}`);
         if (product.price) {
-          console.log(`  Price: $${product.price}`);
+          console.log(
+            `  Price: $${product.price.price} ${product.price.currency}`
+          );
         }
       });
     } else {
@@ -113,10 +120,10 @@ Search using an image URL.
 ```typescript
 async function searchByImageUrl() {
   try {
-    const products = await client.search({ 
-      imageUrl: "https://example.com/path/to/your/image.jpg" 
+    const products = await client.search({
+      imageUrl: "https://example.com/path/to/your/image.jpg",
     });
-    
+
     if (products.length > 0) {
       console.log(`Found ${products.length} products similar to the image:`);
       console.log(`Top result: ${products[0].title}`);
@@ -135,20 +142,22 @@ Search using a base64 encoded image string (ideal for Node.js file system operat
 
 ```typescript
 // This example is best suited for Node.js where you can read files
-import * as fs from 'fs';
+import * as fs from "fs";
 
 async function searchByBase64Image() {
   try {
-    const imageBuffer = fs.readFileSync('path/to/your/local/image.jpg');
-    const base64Image = imageBuffer.toString('base64');
-    
-    const products = await client.search({ 
-      base64Image: base64Image 
+    const imageBuffer = fs.readFileSync("path/to/your/local/image.jpg");
+    const base64Image = imageBuffer.toString("base64");
+
+    const products = await client.search({
+      base64Image: base64Image,
     });
-    
+
     if (products.length > 0) {
-      console.log(`Found ${products.length} products similar to the local image.`);
-      products.forEach(product => {
+      console.log(
+        `Found ${products.length} products similar to the local image.`
+      );
+      products.forEach((product) => {
         console.log(`- ${product.title} (Score: ${product.score})`);
       });
     } else {
@@ -161,9 +170,9 @@ async function searchByBase64Image() {
 ```
 
 <Note type="info">
-  **Image URL vs. Base64:**
-  - `imageUrl`: Ideal if the image is hosted online.
-  - `base64Image`: Use when you have the image data directly (e.g., user upload, file system in Node.js).
+  **Image URL vs. Base64:** - `imageUrl`: Ideal if the image is hosted online. -
+  `base64Image`: Use when you have the image data directly (e.g., user upload,
+  file system in Node.js).
 </Note>
 
 ### Multimodal Search
@@ -175,12 +184,12 @@ async function multimodalSearch() {
   try {
     const products = await client.search({
       query: "dark blue formal shoes", // Text description
-      imageUrl: "https://example.com/shoe_style.jpg" // Style reference image
+      imageUrl: "https://example.com/shoe_style.jpg", // Style reference image
     });
-    
+
     if (products.length > 0) {
       console.log(`Multimodal search found ${products.length} items:`);
-      products.slice(0, 3).forEach(product => {
+      products.slice(0, 3).forEach((product) => {
         console.log(`- ${product.title}`);
         console.log(`  Brand: ${product.brand_name}`);
         console.log(`  Relevance Score: ${product.score}`);
@@ -199,22 +208,24 @@ async function multimodalSearch() {
 Refine your search results using various filters to find exactly what you're looking for.
 
 ```typescript
-import { Channel3Client, SearchFilters } from 'channel3-sdk';
+import { Channel3Client, SearchFilters } from "channel3-sdk";
 
 const client = new Channel3Client({ apiKey: "your_api_key_here" });
 
 async function searchWithFilters() {
   const filters: SearchFilters = {
-    // Brand filtering
-    brands: ["brand_id_1", "brand_id_2"],
-    
-    // Price filtering
-    min_price: 50.0,
-    max_price: 200.0,
-    
+    // Brand filtering (use IDs)
+    brand_ids: ["brand_id_1", "brand_id_2"],
+
+    // Price filtering (values are inclusive)
+    price: {
+      min_price: 50.0,
+      max_price: 200.0,
+    },
+
     // Gender filtering
     gender: "male", // Options: "male", "female", "unisex"
-    
+
     // Availability filtering
     availability: ["InStock"],
   };
@@ -223,16 +234,20 @@ async function searchWithFilters() {
     const products = await client.search({
       query: "running shoes",
       filters: filters,
-      limit: 10 // Maximum number of results
+      limit: 10, // Maximum number of results
     });
 
     if (products.length > 0) {
       console.log(`Found ${products.length} filtered products:`);
-      products.forEach(product => {
+      products.forEach((product) => {
         console.log(`- ${product.title}`);
         console.log(`  Brand: ${product.brand_name}`);
-        console.log(`  Price: $${product.price || 'N/A'}`);
-        console.log(`  Availability: ${product.availability || 'Unknown'}`);
+        console.log(
+          `  Price: $${product.price?.price ?? "N/A"} ${
+            product.price?.currency ?? ""
+          }`
+        );
+        console.log(`  Availability: ${product.availability || "Unknown"}`);
       });
     } else {
       console.log("No products found matching the filters.");
@@ -244,14 +259,11 @@ async function searchWithFilters() {
 ```
 
 <Check>
-  **Available Filters:**
-  - `brands`: Array of brand names
-  - `min_price` / `max_price`: Price range filtering
-  - `gender`: Target gender ("male", "female", "unisex")
-  - `availability`: Array of stock statuses (["InStock", "OutOfStock", "PreOrder", "LimitedAvailability", "BackOrder", "Discontinued", "SoldOut", "Unknown"])
-  - `colors`: Array of color names
-  - `materials`: Array of material types
-  - `categories`: Array of product categories
+  **Available Filters:** - **brand_ids**: Array of brand IDs - **price**: Object
+  with `min_price` / `max_price` (inclusive) - **gender**: Target gender
+  ("male", "female", "unisex") - **availability**: Array of stock statuses
+  (["InStock", "LimitedAvailability", "PreOrder", "BackOrder", "SoldOut",
+  "OutOfStock", "Discontinued", "Unknown"])
 </Check>
 
 ## Product Detail
@@ -259,30 +271,39 @@ async function searchWithFilters() {
 Fetch detailed information about a specific product using its ID.
 
 ```typescript
-import { Channel3Client, ProductDetail, Channel3NotFoundError } from 'channel3-sdk';
+import {
+  Channel3Client,
+  ProductDetail,
+  Channel3NotFoundError,
+} from "channel3-sdk";
 
 const client = new Channel3Client({ apiKey: "your_api_key_here" });
 
 async function getProductDetail(productId: string) {
   try {
     const productDetail: ProductDetail = await client.getProduct(productId);
-    
+
     console.log(`Product Details for: ${productDetail.title}`);
     console.log(`Brand: ${productDetail.brand_name}`);
     console.log(`Description: ${productDetail.description}`);
-    console.log(`Materials: ${productDetail.materials?.join(', ') || 'N/A'}`);
-    console.log(`Key Features: ${productDetail.key_features.join(', ')}`);
-    console.log(`Categories: ${productDetail.categories?.join(', ') || 'N/A'}`);
-    
+    console.log(`Materials: ${productDetail.materials?.join(", ") || "N/A"}`);
+    console.log(`Key Features: ${productDetail.key_features.join(", ")}`);
+    console.log(`Categories: ${productDetail.categories?.join(", ") || "N/A"}`);
+
     // Pricing information
     if (productDetail.price) {
-      console.log(`\nPrice: $${productDetail.price}`);
+      console.log(
+        `\nPrice: $${productDetail.price.price} ${productDetail.price.currency}`
+      );
+      if (productDetail.price.compare_at_price) {
+        console.log(`Compare at: $${productDetail.price.compare_at_price}`);
+      }
     }
-    
+
     if (productDetail.availability) {
       console.log(`Availability: ${productDetail.availability}`);
     }
-    
+
     // Image URLs
     if (productDetail.image_urls && productDetail.image_urls.length > 0) {
       console.log(`\nImages:`);
@@ -290,7 +311,7 @@ async function getProductDetail(productId: string) {
         console.log(`  Image ${index + 1}: ${url}`);
       });
     }
-    
+
     // Specifications
     if (productDetail.specifications) {
       console.log(`\nSpecifications:`);
@@ -298,7 +319,7 @@ async function getProductDetail(productId: string) {
         console.log(`  ${key}: ${value}`);
       });
     }
-    
+
     return productDetail;
   } catch (error) {
     if (error instanceof Channel3NotFoundError) {
@@ -314,7 +335,7 @@ async function getProductDetail(productId: string) {
 async function searchAndGetDetails() {
   try {
     const products = await client.search({ query: "wireless headphones" });
-    
+
     if (products.length > 0 && products[0].id) {
       console.log(`Found '${products[0].title}', fetching details...`);
       await getProductDetail(products[0].id);
@@ -328,7 +349,8 @@ async function searchAndGetDetails() {
 ```
 
 <Note title="Product ID">
-  The `productId` is a unique string identifier for each product. You'll get this from the `id` field of `Product` objects returned by the `search` method.
+  The `productId` is a unique string identifier for each product. You'll get
+  this from the `id` field of `Product` objects returned by the `search` method.
 </Note>
 
 ## Brands
@@ -338,24 +360,27 @@ async function searchAndGetDetails() {
 Retrieve all brands that the vendor currently sells with optional filtering and pagination:
 
 ```typescript
-import { Channel3Client, Brand } from 'channel3-sdk';
+import { Channel3Client, Brand } from "channel3-sdk";
 
 const client = new Channel3Client({ apiKey: "your_api_key_here" });
 
 async function getAllBrands() {
   try {
-    // Get all brands (default pagination)
-    const brands: Brand[] = await client.getBrands();
-    
-    console.log(`Found ${brands.length} brands:`);
-    brands.forEach(brand => {
+    // Get all brands (paginated response)
+    const brandsPage = await client.getBrands();
+    console.log(
+      `Total brands: ${brandsPage.total} (page ${brandsPage.page}, size ${brandsPage.size})`
+    );
+
+    console.log(`Items:`);
+    brandsPage.items.forEach((brand: Brand) => {
       console.log(`- ${brand.name} (ID: ${brand.id})`);
       if (brand.description) {
         console.log(`  Description: ${brand.description}`);
       }
     });
-    
-    return brands;
+
+    return brandsPage.items;
   } catch (error) {
     console.error("Error fetching brands:", error);
     return [];
@@ -365,18 +390,22 @@ async function getAllBrands() {
 async function searchBrands() {
   try {
     // Search brands with query filter
-    const athleticBrands = await client.getBrands("athletic");
-    console.log(`Found ${athleticBrands.length} athletic brands`);
-    
+    const athleticBrandsPage = await client.getBrands("athletic");
+    console.log(
+      `Found ${athleticBrandsPage.total} athletic brands (showing ${athleticBrandsPage.items.length})`
+    );
+
     // Get brands with pagination
     const page2Brands = await client.getBrands(undefined, 2, 50);
-    console.log(`Page 2 brands: ${page2Brands.length} results`);
-    
+    console.log(`Page 2 brands: ${page2Brands.items.length} results`);
+
     // Combined filtering and pagination
     const filteredBrands = await client.getBrands("premium", 1, 25);
-    console.log(`Premium brands (page 1, 25 per page): ${filteredBrands.length} results`);
-    
-    return filteredBrands;
+    console.log(
+      `Premium brands (page 1, 25 per page): ${filteredBrands.items.length} results`
+    );
+
+    return filteredBrands.items;
   } catch (error) {
     console.error("Error in brand search:", error);
     return [];
@@ -389,31 +418,31 @@ async function searchBrands() {
 Retrieve detailed information about a specific brand:
 
 ```typescript
-import { Channel3Client, Brand, Channel3NotFoundError } from 'channel3-sdk';
+import { Channel3Client, Brand, Channel3NotFoundError } from "channel3-sdk";
 
 const client = new Channel3Client({ apiKey: "your_api_key_here" });
 
 async function getBrandDetail(brandId: string) {
   try {
     const brand: Brand = await client.getBrand(brandId);
-    
+
     console.log(`Brand Details for: ${brand.name}`);
     console.log(`Brand ID: ${brand.id}`);
-    
+
     if (brand.description) {
       console.log(`Description: ${brand.description}`);
     }
-    
+
     if (brand.website) {
       console.log(`Website: ${brand.website}`);
     }
-    
+
     if (brand.logo_url) {
       console.log(`Logo URL: ${brand.logo_url}`);
     }
-    
-    console.log(`Product Count: ${brand.product_count || 'N/A'}`);
-    
+
+    console.log(`Product Count: ${brand.product_count || "N/A"}`);
+
     return brand;
   } catch (error) {
     if (error instanceof Channel3NotFoundError) {
@@ -431,39 +460,44 @@ async function getBrandDetail(brandId: string) {
 Use brand IDs obtained from the brands endpoints in your search filters:
 
 ```typescript
-import { Channel3Client, SearchFilters } from 'channel3-sdk';
+import { Channel3Client, SearchFilters } from "channel3-sdk";
 
 const client = new Channel3Client({ apiKey: "your_api_key_here" });
 
 async function searchWithBrandFilters() {
   try {
     // First, get available brands
-    const athleticBrands = await client.getBrands("athletic");
-    const brandIds = athleticBrands.slice(0, 3).map(brand => brand.id); // Take first 3 brands
-    
-    console.log(`Using brand IDs: ${brandIds.join(', ')}`);
-    
+    const athleticBrandsPage = await client.getBrands("athletic");
+    const brandIds = athleticBrandsPage.items
+      .slice(0, 3)
+      .map((brand) => brand.id); // Take first 3 brands
+
+    console.log(`Using brand IDs: ${brandIds.join(", ")}`);
+
     // Use brand IDs in search filters
     const filters: SearchFilters = {
-      brands: brandIds,
-      min_price: 50.0,
-      max_price: 200.0,
-      availability: ["InStock"]
+      brand_ids: brandIds,
+      price: { min_price: 50.0, max_price: 200.0 },
+      availability: ["InStock"],
     };
-    
+
     const products = await client.search({
       query: "running shoes",
       filters: filters,
-      limit: 10
+      limit: 10,
     });
-    
+
     console.log(`Found ${products.length} products from selected brands:`);
-    products.forEach(product => {
+    products.forEach((product) => {
       console.log(`- ${product.title}`);
-              console.log(`  Brand: ${product.brand_name}`);
-        console.log(`  Price: $${product.price || 'N/A'}`);
-      });
-    
+      console.log(`  Brand: ${product.brand_name}`);
+      console.log(
+        `  Price: $${product.price?.price ?? "N/A"} ${
+          product.price?.currency ?? ""
+        }`
+      );
+    });
+
     return products;
   } catch (error) {
     console.error("Error in brand-filtered search:", error);
@@ -475,12 +509,13 @@ async function searchWithBrandFilters() {
 async function brandWorkflow() {
   try {
     console.log("1. Getting all brands...");
-    const allBrands = await getAllBrands();
-    
-    if (allBrands.length > 0) {
+    const allBrandsPage = await getAllBrands();
+
+    // allBrandsPage returns the items array from getAllBrands()
+    if (allBrandsPage.length > 0) {
       console.log("\n2. Getting details for first brand...");
-      await getBrandDetail(allBrands[0].id);
-      
+      await getBrandDetail(allBrandsPage[0].id);
+
       console.log("\n3. Searching products from this brand...");
       await searchWithBrandFilters();
     }
@@ -491,11 +526,15 @@ async function brandWorkflow() {
 ```
 
 <Check>
-  **Brand ID Stability:** Brand IDs are stable identifiers that you can cache and reuse. They won't change unless a brand is completely removed from the platform.
+  **Brand ID Stability:** Brand IDs are stable identifiers that you can cache
+  and reuse. They won't change unless a brand is completely removed from the
+  platform.
 </Check>
 
 <Tip>
-  You can find brand IDs in the [Channel3 dashboard](https://trychannel3.com/dashboard/brands) or by using the `getBrands()` method to discover available brands programmatically.
+  You can find brand IDs in the [Channel3
+  dashboard](https://trychannel3.com/dashboard/brands) or by using the
+  `getBrands()` method to discover available brands programmatically.
 </Tip>
 
 ## Errors
@@ -509,8 +548,8 @@ import {
   Channel3ValidationError,
   Channel3NotFoundError,
   Channel3ServerError,
-  Channel3ConnectionError
-} from 'channel3-sdk';
+  Channel3ConnectionError,
+} from "channel3-sdk";
 
 const client = new Channel3Client({ apiKey: "your_api_key_here" });
 
@@ -519,33 +558,27 @@ async function handleErrors() {
     // Your API calls here
     const products = await client.search({ query: "test product" });
     const productDetail = await client.getProduct("some_product_id");
-    
   } catch (error: any) {
     if (error instanceof Channel3AuthenticationError) {
       console.error("Authentication Error:", error.message);
       console.error("Please check your API key. Is it correct and active?");
       // Handle auth error: redirect to login, refresh token, etc.
-      
     } else if (error instanceof Channel3ValidationError) {
       console.error("Validation Error:", error.message);
       console.error("Invalid request data:", error.responseData);
       // Handle validation error: fix request parameters
-      
     } else if (error instanceof Channel3NotFoundError) {
       console.error("Not Found Error:", error.message);
       console.error("The requested resource could not be found.");
       // Handle not found: show "product not available" message
-      
     } else if (error instanceof Channel3ServerError) {
       console.error("Server Error:", error.message);
       console.error("An issue occurred on the Channel3 API side.");
       // Handle server error: retry after delay, show maintenance message
-      
     } else if (error instanceof Channel3ConnectionError) {
       console.error("Connection Error:", error.message);
       console.error("Failed to connect to the Channel3 API.");
       // Handle connection error: check network, retry with backoff
-      
     } else {
       console.error("Unexpected error:", error.message || error);
       // Handle unexpected errors
@@ -555,7 +588,9 @@ async function handleErrors() {
 ```
 
 <Note type="best_practice" title="Error Handling Best Practices">
-  Always wrap API calls in `try...catch` blocks in production code. This prevents crashes and allows you to provide helpful feedback to users when something goes wrong.
+  Always wrap API calls in `try...catch` blocks in production code. This
+  prevents crashes and allows you to provide helpful feedback to users when
+  something goes wrong.
 </Note>
 
 ## Complete Example
@@ -572,8 +607,8 @@ import {
   Channel3ValidationError,
   Channel3NotFoundError,
   Channel3ServerError,
-  Channel3ConnectionError
-} from 'channel3-sdk';
+  Channel3ConnectionError,
+} from "channel3-sdk";
 
 class ProductSearchApp {
   private client: Channel3Client;
@@ -581,26 +616,30 @@ class ProductSearchApp {
   constructor(apiKey: string) {
     this.client = new Channel3Client({
       apiKey: apiKey,
-      timeout: 30000 // 30 second timeout
     });
   }
 
   // Comprehensive search with filters
-  async searchProducts(query: string, options: {
-    imageUrl?: string;
-    brands?: string[];
-    priceRange?: { min: number; max: number };
-    gender?: string;
-    availability?: string[];
-    limit?: number;
-  } = {}): Promise<Product[]> {
+  async searchProducts(
+    query: string,
+    options: {
+      imageUrl?: string;
+      brandIds?: string[];
+      priceRange?: { min: number; max: number };
+      gender?: string;
+      availability?: string[];
+      limit?: number;
+    } = {}
+  ): Promise<Product[]> {
     try {
-      const filters: SearchFilters = {};
-      
-      if (options.brands) filters.brands = options.brands;
+      const filters: SearchFilters = {} as SearchFilters;
+
+      if (options.brandIds) filters.brand_ids = options.brandIds;
       if (options.priceRange) {
-        filters.min_price = options.priceRange.min;
-        filters.max_price = options.priceRange.max;
+        filters.price = {
+          min_price: options.priceRange.min,
+          max_price: options.priceRange.max,
+        };
       }
       if (options.gender) filters.gender = options.gender;
       if (options.availability) filters.availability = options.availability;
@@ -608,7 +647,7 @@ class ProductSearchApp {
       const searchParams: any = {
         query: query,
         filters: filters,
-        limit: options.limit || 20
+        limit: options.limit || 20,
       };
 
       if (options.imageUrl) {
@@ -616,12 +655,11 @@ class ProductSearchApp {
       }
 
       const products = await this.client.search(searchParams);
-      
+
       console.log(`✅ Found ${products.length} products matching criteria`);
       return products;
-
     } catch (error) {
-      this.handleError(error, 'search');
+      this.handleError(error, "search");
       return [];
     }
   }
@@ -632,9 +670,8 @@ class ProductSearchApp {
       const productDetail = await this.client.getProduct(productId);
       console.log(`✅ Retrieved details for: ${productDetail.title}`);
       return productDetail;
-      
     } catch (error) {
-      this.handleError(error, 'product detail');
+      this.handleError(error, "product detail");
       return null;
     }
   }
@@ -642,28 +679,27 @@ class ProductSearchApp {
   // Centralized error handling
   private handleError(error: any, operation: string): void {
     console.error(`\n❌ Error during ${operation}:`);
-    
+
     if (error instanceof Channel3AuthenticationError) {
       console.error("🔐 Authentication failed - check your API key");
-      console.error("Suggestion: Verify your API key in the Channel3 dashboard");
-      
+      console.error(
+        "Suggestion: Verify your API key in the Channel3 dashboard"
+      );
     } else if (error instanceof Channel3ValidationError) {
       console.error("⚠️  Invalid request parameters");
       console.error("Details:", error.responseData);
       console.error("Suggestion: Check your search parameters and filters");
-      
     } else if (error instanceof Channel3NotFoundError) {
       console.error("🔍 Resource not found");
-      console.error("Suggestion: The product may have been removed or doesn't exist");
-      
+      console.error(
+        "Suggestion: The product may have been removed or doesn't exist"
+      );
     } else if (error instanceof Channel3ServerError) {
       console.error("🌐 Server error - Channel3 API issue");
       console.error("Suggestion: Try again in a few minutes");
-      
     } else if (error instanceof Channel3ConnectionError) {
       console.error("📡 Connection failed");
       console.error("Suggestion: Check your internet connection");
-      
     } else {
       console.error("💥 Unexpected error:", error.message || error);
     }
@@ -674,17 +710,19 @@ class ProductSearchApp {
     console.log(`\n${index + 1}. ${product.title}`);
     console.log(`   Brand: ${product.brand_name}`);
     console.log(`   Score: ${product.score}`);
-    
-          if (product.price) {
-        console.log(`   Price: $${product.price}`);
-      }
-      
-      if (product.availability) {
-        console.log(`   Availability: ${product.availability}`);
-      }
-    
-    if (product.image_urls && product.image_urls.length > 0) {
-      console.log(`   Image: ${product.image_urls[0]}`);
+
+    if (product.price) {
+      console.log(
+        `   Price: $${product.price.price} ${product.price.currency}`
+      );
+    }
+
+    if (product.availability) {
+      console.log(`   Availability: ${product.availability}`);
+    }
+
+    if (product.image_url) {
+      console.log(`   Image: ${product.image_url}`);
     }
   }
 
@@ -693,48 +731,61 @@ class ProductSearchApp {
     try {
       // Get all brands with pagination
       console.log("   Getting athletic brands...");
-      const brands = await this.client.getBrands("athletic", 1, 10);
-      console.log(`   ✅ Found ${brands.length} athletic brands`);
-      
-      brands.slice(0, 3).forEach(brand => {
+      const brandsPage = await this.client.getBrands("athletic", 1, 10);
+      console.log(
+        `   ✅ Found ${brandsPage.total} athletic brands (showing ${brandsPage.items.length})`
+      );
+
+      brandsPage.items.slice(0, 3).forEach((brand) => {
         console.log(`   - ${brand.name} (ID: ${brand.id})`);
       });
-      
+
       // Get detailed brand information
-      if (brands.length > 0) {
-        const brandId = brands[0].id;
-        console.log(`   Getting details for brand: ${brands[0].name}...`);
-        
+      if (brandsPage.items.length > 0) {
+        const brandId = brandsPage.items[0].id;
+        console.log(
+          `   Getting details for brand: ${brandsPage.items[0].name}...`
+        );
+
         try {
           const detailedBrand = await this.client.getBrand(brandId);
           console.log(`   📋 Brand Details:`);
           console.log(`      Name: ${detailedBrand.name}`);
           if (detailedBrand.description) {
-            console.log(`      Description: ${detailedBrand.description.substring(0, 100)}...`);
+            console.log(
+              `      Description: ${detailedBrand.description.substring(
+                0,
+                100
+              )}...`
+            );
           }
-          console.log(`      Product Count: ${detailedBrand.product_count || 'N/A'}`);
-          
+          console.log(
+            `      Product Count: ${detailedBrand.product_count || "N/A"}`
+          );
         } catch (error) {
           console.log("   Brand details not available");
         }
-        
+
         // Search using specific brand filters
-        const brandIds = brands.slice(0, 2).map(b => b.id);
-        console.log(`   Searching products from brands: ${brandIds.join(', ')}`);
-        
+        const brandIds = brandsPage.items.slice(0, 2).map((b) => b.id);
+        console.log(
+          `   Searching products from brands: ${brandIds.join(", ")}`
+        );
+
         const brandProducts = await this.searchProducts("running shoes", {
-          brands: brandIds,
-          limit: 3
+          brandIds: brandIds,
+          limit: 3,
         });
-        
-        console.log(`   Found ${brandProducts.length} products from selected brands:`);
-        brandProducts.forEach(product => {
+
+        console.log(
+          `   Found ${brandProducts.length} products from selected brands:`
+        );
+        brandProducts.forEach((product) => {
           console.log(`   - ${product.title} (${product.brand_name})`);
         });
       }
-      
     } catch (error) {
-      this.handleError(error, 'brand operations');
+      this.handleError(error, "brand operations");
     }
   }
 
@@ -745,16 +796,17 @@ class ProductSearchApp {
     // 1. Text search with filters
     console.log("1️⃣ Searching for men's sneakers under $150...");
     const sneakers = await this.searchProducts("men's sneakers", {
-      brands: ["brand_id_1", "brand_id_2"],
+      brandIds: ["brand_id_1", "brand_id_2"],
       priceRange: { min: 50, max: 150 },
       gender: "male",
       availability: ["InStock"],
-      limit: 5
+      limit: 5,
     });
-    
+
     <Tip>
-      You can find brand IDs in the [Channel3 dashboard](https://trychannel3.com/dashboard/brands).
-    </Tip>
+      You can find brand IDs in the [Channel3
+      dashboard](https://trychannel3.com/dashboard/brands).
+    </Tip>;
 
     sneakers.slice(0, 3).forEach((product, index) => {
       this.displayProduct(product, index);
@@ -764,7 +816,7 @@ class ProductSearchApp {
     console.log("\n2️⃣ Multimodal search - text + image...");
     const multimodalResults = await this.searchProducts("blue dress shirt", {
       imageUrl: "https://example.com/dress_shirt.jpg",
-      limit: 3
+      limit: 3,
     });
 
     multimodalResults.forEach((product, index) => {
@@ -775,20 +827,34 @@ class ProductSearchApp {
     if (sneakers.length > 0 && sneakers[0].id) {
       console.log("\n3️⃣ Getting detailed information for first product...");
       const productDetail = await this.getProductDetails(sneakers[0].id);
-      
+
       if (productDetail) {
         console.log(`\n📋 Product Details:`);
         console.log(`   Title: ${productDetail.title}`);
-        console.log(`   Description: ${productDetail.description.substring(0, 200)}...`);
-        console.log(`   Materials: ${productDetail.materials?.join(', ') || 'N/A'}`);
-        console.log(`   Features: ${productDetail.key_features.join(', ')}`);
-        console.log(`   Categories: ${productDetail.categories?.join(', ') || 'N/A'}`);
-        
+        console.log(
+          `   Description: ${productDetail.description.substring(0, 200)}...`
+        );
+        console.log(
+          `   Materials: ${productDetail.materials?.join(", ") || "N/A"}`
+        );
+        console.log(`   Features: ${productDetail.key_features.join(", ")}`);
+        console.log(
+          `   Categories: ${productDetail.categories?.join(", ") || "N/A"}`
+        );
+
+        if (productDetail.price) {
+          console.log(
+            `   Price: $${productDetail.price.price} ${productDetail.price.currency}`
+          );
+        }
+
         if (productDetail.specifications) {
           console.log(`   Specifications:`);
-          Object.entries(productDetail.specifications).forEach(([key, value]) => {
-            console.log(`     ${key}: ${value}`);
-          });
+          Object.entries(productDetail.specifications).forEach(
+            ([key, value]) => {
+              console.log(`     ${key}: ${value}`);
+            }
+          );
         }
       }
     }
@@ -819,22 +885,12 @@ This example demonstrates:
 
 - **Search**: Text search with comprehensive filters
 - **Multimodal**: Combining text and image search
-- **Filters**: Brand, price range, gender, availability filtering
+- **Filters**: Brand IDs, nested price range, gender, availability filtering
 - **Product Details**: Retrieving comprehensive product information
 - **Error Handling**: Graceful handling of different error types
 - **Best Practices**: Structured error handling, logging, and user feedback
 
 <Check>
-  **Production Ready:** This example includes proper error handling, logging, and structured code that you can adapt for production applications.
+  **Production Ready:** This example includes proper error handling, logging,
+  and structured code that you can adapt for production applications.
 </Check>
-
-## Browser Support
-
-The SDK works in modern browsers that support:
-- ES2018+ JavaScript features
-- The `fetch` API
-- `AbortController` (for request timeouts)
-
-For older browsers, you may need polyfills for `fetch` and `AbortController`.
-
-You're now ready to build powerful product search experiences with the Channel3 TypeScript/JavaScript SDK! 🎉
