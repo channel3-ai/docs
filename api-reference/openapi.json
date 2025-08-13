@@ -3,10 +3,8 @@
   "info": { "title": "FastAPI", "version": "0.1.0" },
   "servers": [
     {
-      "url": "https://api.trychannel3.com",
-      "description": "Production environment"
-    },
-    { "url": "http://localhost:8000", "description": "Development environment" }
+      "url": "https://api.trychannel3.com"
+    }
   ],
   "paths": {
     "/v0/search": {
