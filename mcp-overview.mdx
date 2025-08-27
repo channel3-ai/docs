@@ -125,6 +125,28 @@ async def main(message: str):
 asyncio.run(main("I'm looking for a new laptop"))
 ```
 
+```bash OpenAI Responses API
+curl -X POST https://api.openai.com/v1/responses -i \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <openai-api-key>" \
+  -d '{
+    "model": "gpt-4.1",
+    "tools": [
+        {
+            "type": "mcp",
+            "server_label": "channel3",
+            "server_url": "https://mcp.trychannel3.com",
+            "headers": {
+                "Authorization": "Bearer <channel3-api-key>"
+            },
+            "allowed_tools": ["search"], // add more as you wish
+            "require_approval": "never"
+        }
+    ],
+    "input": "can you find me pants?"
+}'
+```
+
 </CodeGroup>
 
 That's it! Your agent now has access to Channel3's product search capabilities. Start building and watch your AI come to life with real-world shopping superpowers. 🛍️
