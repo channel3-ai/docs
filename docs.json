@@ -26,6 +26,7 @@
         "group": "API",
         "pages": [
           "api-reference/endpoint/search",
+          "api-reference/endpoint/enrich",
           "api-reference/endpoint/product-detail",
           "api-reference/endpoint/brands",
           "api-reference/endpoint/brand-detail"
