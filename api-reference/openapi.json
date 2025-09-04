@@ -1,30 +1,23 @@
 {
   "openapi": "3.1.0",
-  "info": {
-    "title": "FastAPI",
-    "version": "0.1.0"
-  },
+  "info": { "title": "FastAPI", "version": "0.1.0" },
   "servers": [
     {
-      "url": "http://localhost:8000",
-      "description": "Development environment"
+      "url": "https://api.trychannel3.com",
+      "description": "Production environment"
     }
   ],
   "paths": {
     "/v0/search": {
       "post": {
-        "tags": [
-          "channel3-api"
-        ],
+        "tags": ["channel3-api"],
         "summary": "Search",
         "description": "Search for products.",
         "operationId": "search_v0_search_post",
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SearchRequest"
-              }
+              "schema": { "$ref": "#/components/schemas/SearchRequest" }
             }
           },
           "required": true
@@ -35,9 +28,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "items": {
-                    "$ref": "#/components/schemas/Product"
-                  },
+                  "items": { "$ref": "#/components/schemas/Product" },
                   "type": "array",
                   "title": "Response Search V0 Search Post"
                 }
@@ -48,9 +39,7 @@
             "description": "Unauthorized - Invalid or missing authentication",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                },
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
                 "examples": {
                   "missing_key": {
                     "summary": "Missing API Key",
@@ -72,9 +61,7 @@
             "description": "Payment required",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                },
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
                 "example": {
                   "detail": "You have used all of your free credits. Add a payment method to continue."
                 }
@@ -85,16 +72,11 @@
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                },
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
                 "example": {
                   "detail": [
                     {
-                      "loc": [
-                        "body",
-                        "query"
-                      ],
+                      "loc": ["body", "query"],
                       "msg": "field required",
                       "type": "value_error.missing"
                     }
@@ -107,12 +89,8 @@
             "description": "Internal Server Error",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                },
-                "example": {
-                  "detail": "Internal Server Error"
-                }
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+                "example": { "detail": "Internal Server Error" }
               }
             }
           },
@@ -120,9 +98,7 @@
             "description": "Bad request",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                },
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
                 "example": {
                   "detail": "Could not fetch image from image_url. Please ensure the url is valid and publicly accessible."
                 }
@@ -130,35 +106,22 @@
             }
           }
         },
-        "security": [
-          {
-            "APIKeyHeader": []
-          }
-        ]
+        "security": [{ "APIKeyHeader": [] }]
       }
     },
     "/v0/products/{product_id}": {
       "get": {
-        "tags": [
-          "channel3-api"
-        ],
+        "tags": ["channel3-api"],
         "summary": "Get Product Detail",
         "description": "Get detailed information about a specific product by its ID.",
         "operationId": "get_product_detail_v0_products__product_id__get",
-        "security": [
-          {
-            "APIKeyHeader": []
-          }
-        ],
+        "security": [{ "APIKeyHeader": [] }],
         "parameters": [
           {
             "name": "product_id",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Product Id"
-            }
+            "schema": { "type": "string", "title": "Product Id" }
           }
         ],
         "responses": {
@@ -166,9 +129,7 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProductDetail"
-                }
+                "schema": { "$ref": "#/components/schemas/ProductDetail" }
               }
             }
           },
@@ -190,9 +151,7 @@
                     }
                   }
                 },
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
               }
             }
           },
@@ -203,9 +162,7 @@
                 "example": {
                   "detail": "You have used all of your free credits. Add a payment method to continue."
                 },
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
               }
             }
           },
@@ -216,18 +173,13 @@
                 "example": {
                   "detail": [
                     {
-                      "loc": [
-                        "body",
-                        "query"
-                      ],
+                      "loc": ["body", "query"],
                       "msg": "field required",
                       "type": "value_error.missing"
                     }
                   ]
                 },
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
               }
             }
           },
@@ -235,12 +187,8 @@
             "description": "Internal Server Error",
             "content": {
               "application/json": {
-                "example": {
-                  "detail": "Internal Server Error"
-                },
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
+                "example": { "detail": "Internal Server Error" },
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
               }
             }
           },
@@ -248,12 +196,8 @@
             "description": "Product not found",
             "content": {
               "application/json": {
-                "example": {
-                  "detail": "Product with ID 'xyz123' not found"
-                },
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
+                "example": { "detail": "Product with ID 'xyz123' not found" },
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
               }
             }
           }
@@ -262,31 +206,18 @@
     },
     "/v0/brands": {
       "get": {
-        "tags": [
-          "channel3-api"
-        ],
+        "tags": ["channel3-api"],
         "summary": "Get Brands",
         "description": "Get all brands that the vendor currently sells.",
         "operationId": "get_brands_v0_brands_get",
-        "security": [
-          {
-            "APIKeyHeader": []
-          }
-        ],
+        "security": [{ "APIKeyHeader": [] }],
         "parameters": [
           {
             "name": "query",
             "in": "query",
             "required": false,
             "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
+              "anyOf": [{ "type": "string" }, { "type": "null" }],
               "title": "Query"
             }
           },
@@ -294,21 +225,13 @@
             "name": "page",
             "in": "query",
             "required": false,
-            "schema": {
-              "type": "integer",
-              "default": 1,
-              "title": "Page"
-            }
+            "schema": { "type": "integer", "default": 1, "title": "Page" }
           },
           {
             "name": "size",
             "in": "query",
             "required": false,
-            "schema": {
-              "type": "integer",
-              "default": 100,
-              "title": "Size"
-            }
+            "schema": { "type": "integer", "default": 100, "title": "Size" }
           }
         ],
         "responses": {
@@ -340,9 +263,7 @@
                     }
                   }
                 },
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
               }
             }
           },
@@ -353,9 +274,7 @@
                 "example": {
                   "detail": "You have used all of your free credits. Add a payment method to continue."
                 },
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
               }
             }
           },
@@ -366,18 +285,13 @@
                 "example": {
                   "detail": [
                     {
-                      "loc": [
-                        "body",
-                        "query"
-                      ],
+                      "loc": ["body", "query"],
                       "msg": "field required",
                       "type": "value_error.missing"
                     }
                   ]
                 },
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
               }
             }
           },
@@ -385,12 +299,8 @@
             "description": "Internal Server Error",
             "content": {
               "application/json": {
-                "example": {
-                  "detail": "Internal Server Error"
-                },
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
+                "example": { "detail": "Internal Server Error" },
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
               }
             }
           }
@@ -399,26 +309,17 @@
     },
     "/v0/brands/{brand_id}": {
       "get": {
-        "tags": [
-          "channel3-api"
-        ],
+        "tags": ["channel3-api"],
         "summary": "Get Brand Detail",
         "description": "Get detailed information for a specific brand by its ID.",
         "operationId": "get_brand_detail_v0_brands__brand_id__get",
-        "security": [
-          {
-            "APIKeyHeader": []
-          }
-        ],
+        "security": [{ "APIKeyHeader": [] }],
         "parameters": [
           {
             "name": "brand_id",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Brand Id"
-            }
+            "schema": { "type": "string", "title": "Brand Id" }
           }
         ],
         "responses": {
@@ -426,9 +327,7 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Brand"
-                }
+                "schema": { "$ref": "#/components/schemas/Brand" }
               }
             }
           },
@@ -450,9 +349,7 @@
                     }
                   }
                 },
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
               }
             }
           },
@@ -463,9 +360,7 @@
                 "example": {
                   "detail": "You have used all of your free credits. Add a payment method to continue."
                 },
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
               }
             }
           },
@@ -476,18 +371,13 @@
                 "example": {
                   "detail": [
                     {
-                      "loc": [
-                        "body",
-                        "query"
-                      ],
+                      "loc": ["body", "query"],
                       "msg": "field required",
                       "type": "value_error.missing"
                     }
                   ]
                 },
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
               }
             }
           },
@@ -495,12 +385,8 @@
             "description": "Internal Server Error",
             "content": {
               "application/json": {
-                "example": {
-                  "detail": "Internal Server Error"
-                },
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
+                "example": { "detail": "Internal Server Error" },
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
               }
             }
           },
@@ -508,12 +394,8 @@
             "description": "Brand not found",
             "content": {
               "application/json": {
-                "example": {
-                  "detail": "Brand with ID 'xyz123' not found"
-                },
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
+                "example": { "detail": "Brand with ID 'xyz123' not found" },
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
               }
             }
           }
@@ -522,18 +404,14 @@
     },
     "/v0/enrich": {
       "post": {
-        "tags": [
-          "channel3-api"
-        ],
+        "tags": ["channel3-api"],
         "summary": "Enrich Product Url",
         "description": "Enrich a product URL with additional information.",
         "operationId": "enrich_product_url_v0_enrich_post",
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/EnrichRequest"
-              }
+              "schema": { "$ref": "#/components/schemas/EnrichRequest" }
             }
           },
           "required": true
@@ -543,9 +421,7 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/EnrichedProduct"
-                }
+                "schema": { "$ref": "#/components/schemas/EnrichedProduct" }
               }
             }
           },
@@ -553,9 +429,7 @@
             "description": "Unauthorized - Invalid or missing authentication",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                },
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
                 "examples": {
                   "missing_key": {
                     "summary": "Missing API Key",
@@ -577,9 +451,7 @@
             "description": "Payment required",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                },
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
                 "example": {
                   "detail": "You have used all of your free credits. Add a payment method to continue."
                 }
@@ -590,16 +462,11 @@
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                },
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
                 "example": {
                   "detail": [
                     {
-                      "loc": [
-                        "body",
-                        "query"
-                      ],
+                      "loc": ["body", "query"],
                       "msg": "field required",
                       "type": "value_error.missing"
                     }
@@ -612,12 +479,8 @@
             "description": "Internal Server Error",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                },
-                "example": {
-                  "detail": "Internal Server Error"
-                }
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+                "example": { "detail": "Internal Server Error" }
               }
             }
           },
@@ -625,9 +488,7 @@
             "description": "Product not found",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                },
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
                 "example": {
                   "detail": "Product with URL 'abc.com/product-123' not found"
                 }
@@ -635,11 +496,7 @@
             }
           }
         },
-        "security": [
-          {
-            "APIKeyHeader": []
-          }
-        ]
+        "security": [{ "APIKeyHeader": [] }]
       }
     },
     "/": {
@@ -649,11 +506,7 @@
         "responses": {
           "200": {
             "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            }
+            "content": { "application/json": { "schema": {} } }
           }
         }
       }
@@ -677,42 +530,19 @@
       },
       "Brand": {
         "properties": {
-          "id": {
-            "type": "string",
-            "title": "Id"
-          },
-          "name": {
-            "type": "string",
-            "title": "Name"
-          },
+          "id": { "type": "string", "title": "Id" },
+          "name": { "type": "string", "title": "Name" },
           "logo_url": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
             "title": "Logo Url"
           },
           "description": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
             "title": "Description"
           }
         },
         "type": "object",
-        "required": [
-          "id",
-          "name"
-        ],
+        "required": ["id", "name"],
         "title": "Brand"
       },
       "EnrichRequest": {
@@ -724,35 +554,20 @@
           }
         },
         "type": "object",
-        "required": [
-          "url"
-        ],
+        "required": ["url"],
         "title": "EnrichRequest"
       },
       "EnrichedProduct": {
         "properties": {
-          "url": {
-            "type": "string",
-            "title": "Url"
-          },
-          "main_image_url": {
-            "type": "string",
-            "title": "Main Image Url"
-          },
+          "url": { "type": "string", "title": "Url" },
+          "main_image_url": { "type": "string", "title": "Main Image Url" },
           "other_image_urls": {
-            "items": {
-              "type": "string"
-            },
+            "items": { "type": "string" },
             "type": "array",
             "title": "Other Image Urls"
           },
-          "price": {
-            "$ref": "#/components/schemas/Price"
-          },
-          "title": {
-            "type": "string",
-            "title": "Title"
-          }
+          "price": { "$ref": "#/components/schemas/Price" },
+          "title": { "type": "string", "title": "Title" }
         },
         "type": "object",
         "required": [
@@ -765,63 +580,33 @@
         "title": "EnrichedProduct"
       },
       "ErrorResponse": {
-        "properties": {
-          "detail": {
-            "title": "Detail"
-          }
-        },
+        "properties": { "detail": { "title": "Detail" } },
         "type": "object",
-        "required": [
-          "detail"
-        ],
+        "required": ["detail"],
         "title": "ErrorResponse"
       },
       "PaginatedResponse_Brand_": {
         "properties": {
           "items": {
-            "items": {
-              "$ref": "#/components/schemas/Brand"
-            },
+            "items": { "$ref": "#/components/schemas/Brand" },
             "type": "array",
             "title": "Items"
           },
-          "pagination": {
-            "$ref": "#/components/schemas/PaginationMeta"
-          }
+          "pagination": { "$ref": "#/components/schemas/PaginationMeta" }
         },
         "type": "object",
-        "required": [
-          "items",
-          "pagination"
-        ],
+        "required": ["items", "pagination"],
         "title": "PaginatedResponse[Brand]"
       },
       "PaginationMeta": {
         "properties": {
-          "current_page": {
-            "type": "integer",
-            "title": "Current Page"
-          },
-          "page_size": {
-            "type": "integer",
-            "title": "Page Size"
-          },
-          "total_count": {
-            "type": "integer",
-            "title": "Total Count"
-          },
-          "total_pages": {
-            "type": "integer",
-            "title": "Total Pages"
-          }
+          "current_page": { "type": "integer", "title": "Current Page" },
+          "page_size": { "type": "integer", "title": "Page Size" },
+          "total_count": { "type": "integer", "title": "Total Count" },
+          "total_pages": { "type": "integer", "title": "Total Pages" }
         },
         "type": "object",
-        "required": [
-          "current_page",
-          "page_size",
-          "total_count",
-          "total_pages"
-        ],
+        "required": ["current_page", "page_size", "total_count", "total_pages"],
         "title": "PaginationMeta",
         "description": "Pagination metadata for responses"
       },
@@ -833,14 +618,7 @@
             "description": "The current price of the product, including any discounts."
           },
           "compare_at_price": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
             "title": "Compare At Price",
             "description": "The original price of the product before any discounts."
           },
@@ -851,59 +629,25 @@
           }
         },
         "type": "object",
-        "required": [
-          "price",
-          "currency"
-        ],
+        "required": ["price", "currency"],
         "title": "Price"
       },
       "Product": {
         "properties": {
-          "id": {
-            "type": "string",
-            "title": "Id"
-          },
-          "score": {
-            "type": "integer",
-            "title": "Score"
-          },
-          "url": {
-            "type": "string",
-            "title": "Url"
-          },
-          "title": {
-            "type": "string",
-            "title": "Title"
-          },
+          "id": { "type": "string", "title": "Id" },
+          "score": { "type": "integer", "title": "Score" },
+          "url": { "type": "string", "title": "Url" },
+          "title": { "type": "string", "title": "Title" },
           "description": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
             "title": "Description"
           },
-          "brand_name": {
-            "type": "string",
-            "title": "Brand Name"
-          },
-          "image_url": {
-            "type": "string",
-            "title": "Image Url"
-          },
-          "price": {
-            "$ref": "#/components/schemas/Price"
-          },
-          "availability": {
-            "$ref": "#/components/schemas/AvailabilityStatus"
-          },
+          "brand_name": { "type": "string", "title": "Brand Name" },
+          "image_url": { "type": "string", "title": "Image Url" },
+          "price": { "$ref": "#/components/schemas/Price" },
+          "availability": { "$ref": "#/components/schemas/AvailabilityStatus" },
           "variants": {
-            "items": {
-              "$ref": "#/components/schemas/Variant"
-            },
+            "items": { "$ref": "#/components/schemas/Variant" },
             "type": "array",
             "title": "Variants",
             "default": []
@@ -925,132 +669,60 @@
       },
       "ProductDetail": {
         "properties": {
-          "id": {
-            "type": "string",
-            "title": "Id"
-          },
-          "url": {
-            "type": "string",
-            "title": "Url"
-          },
-          "title": {
-            "type": "string",
-            "title": "Title"
-          },
+          "id": { "type": "string", "title": "Id" },
+          "url": { "type": "string", "title": "Url" },
+          "title": { "type": "string", "title": "Title" },
           "description": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
             "title": "Description"
           },
           "brand_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
             "title": "Brand Id"
           },
           "brand_name": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
             "title": "Brand Name"
           },
           "image_urls": {
             "anyOf": [
-              {
-                "items": {
-                  "type": "string"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
+              { "items": { "type": "string" }, "type": "array" },
+              { "type": "null" }
             ],
             "title": "Image Urls"
           },
-          "price": {
-            "$ref": "#/components/schemas/Price"
-          },
-          "availability": {
-            "$ref": "#/components/schemas/AvailabilityStatus"
-          },
+          "price": { "$ref": "#/components/schemas/Price" },
+          "availability": { "$ref": "#/components/schemas/AvailabilityStatus" },
           "gender": {
             "anyOf": [
-              {
-                "type": "string",
-                "enum": [
-                  "male",
-                  "female",
-                  "unisex"
-                ]
-              },
-              {
-                "type": "null"
-              }
+              { "type": "string", "enum": ["male", "female", "unisex"] },
+              { "type": "null" }
             ],
             "title": "Gender"
           },
           "materials": {
             "anyOf": [
-              {
-                "items": {
-                  "type": "string"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
+              { "items": { "type": "string" }, "type": "array" },
+              { "type": "null" }
             ],
             "title": "Materials"
           },
           "key_features": {
             "anyOf": [
-              {
-                "items": {
-                  "type": "string"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
+              { "items": { "type": "string" }, "type": "array" },
+              { "type": "null" }
             ],
             "title": "Key Features"
           },
           "variants": {
-            "items": {
-              "$ref": "#/components/schemas/Variant"
-            },
+            "items": { "$ref": "#/components/schemas/Variant" },
             "type": "array",
             "title": "Variants",
             "default": []
           }
         },
         "type": "object",
-        "required": [
-          "id",
-          "url",
-          "title",
-          "price",
-          "availability"
-        ],
+        "required": ["id", "url", "title", "price", "availability"],
         "title": "ProductDetail",
         "description": "A product with detailed information"
       },
@@ -1074,26 +746,12 @@
       "SearchFilterPrice": {
         "properties": {
           "min_price": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
             "title": "Min Price",
             "description": "Minimum price, in dollars and cents"
           },
           "max_price": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "number" }, { "type": "null" }],
             "title": "Max Price",
             "description": "Maximum price, in dollars and cents"
           }
@@ -1106,57 +764,33 @@
         "properties": {
           "brand_ids": {
             "anyOf": [
-              {
-                "items": {
-                  "type": "string"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
+              { "items": { "type": "string" }, "type": "array" },
+              { "type": "null" }
             ],
             "title": "Brand Ids",
             "description": "List of brand IDs"
           },
           "gender": {
             "anyOf": [
-              {
-                "type": "string",
-                "enum": [
-                  "male",
-                  "female",
-                  "unisex"
-                ]
-              },
-              {
-                "type": "null"
-              }
+              { "type": "string", "enum": ["male", "female", "unisex"] },
+              { "type": "null" }
             ],
             "title": "Gender"
           },
           "price": {
             "anyOf": [
-              {
-                "$ref": "#/components/schemas/SearchFilterPrice"
-              },
-              {
-                "type": "null"
-              }
+              { "$ref": "#/components/schemas/SearchFilterPrice" },
+              { "type": "null" }
             ],
             "description": "Price filter. Values are inclusive."
           },
           "availability": {
             "anyOf": [
               {
-                "items": {
-                  "$ref": "#/components/schemas/AvailabilityStatus"
-                },
+                "items": { "$ref": "#/components/schemas/AvailabilityStatus" },
                 "type": "array"
               },
-              {
-                "type": "null"
-              }
+              { "type": "null" }
             ],
             "title": "Availability",
             "description": "List of availability statuses"
@@ -1168,50 +802,22 @@
       "SearchRequest": {
         "properties": {
           "query": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
             "title": "Query",
             "description": "Search query"
           },
           "image_url": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
             "title": "Image Url",
             "description": "Image URL"
           },
           "base64_image": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
             "title": "Base64 Image",
             "description": "Base64 encoded image"
           },
           "limit": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "integer" }, { "type": "null" }],
             "title": "Limit",
             "description": "Optional limit on the number of results",
             "default": 20
@@ -1224,20 +830,10 @@
           "config": {
             "$ref": "#/components/schemas/SearchConfig",
             "description": "Optional configuration",
-            "default": {
-              "enrich_query": true,
-              "semantic_search": true
-            }
+            "default": { "enrich_query": true, "semantic_search": true }
           },
           "context": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
             "title": "Context",
             "description": "Optional customer information to personalize search results"
           }
@@ -1247,34 +843,17 @@
       },
       "Variant": {
         "properties": {
-          "product_id": {
-            "type": "string",
-            "title": "Product Id"
-          },
-          "title": {
-            "type": "string",
-            "title": "Title"
-          },
-          "image_url": {
-            "type": "string",
-            "title": "Image Url"
-          }
+          "product_id": { "type": "string", "title": "Product Id" },
+          "title": { "type": "string", "title": "Title" },
+          "image_url": { "type": "string", "title": "Image Url" }
         },
         "type": "object",
-        "required": [
-          "product_id",
-          "title",
-          "image_url"
-        ],
+        "required": ["product_id", "title", "image_url"],
         "title": "Variant"
       }
     },
     "securitySchemes": {
-      "APIKeyHeader": {
-        "type": "apiKey",
-        "in": "header",
-        "name": "x-api-key"
-      }
+      "APIKeyHeader": { "type": "apiKey", "in": "header", "name": "x-api-key" }
     }
   }
 }
