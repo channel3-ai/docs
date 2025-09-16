@@ -3,8 +3,6 @@ title: "TypeScript SDK Quickstart"
 description: "Get started with the Channel3 TypeScript SDK to search and retrieve product information."
 ---
 
-The Channel3 TypeScript SDK, generated with [Stainless](https://www.stainless.com/), provides convenient access to the Channel3 REST API from server-side TypeScript or JavaScript.
-
 ## Installation
 
 You can install the SDK using your favorite package manager:
@@ -21,6 +19,7 @@ yarn add @channel3/sdk
 ```bash pnpm
 pnpm add @channel3/sdk
 ```
+
 </CodeGroup>
 
 ## Authentication
@@ -28,7 +27,7 @@ pnpm add @channel3/sdk
 You can provide your API key using the `CHANNEL3_API_KEY` environment variable, or by passing it directly to the client.
 
 ```typescript
-import Channel3 from '@channel3/sdk';
+import Channel3 from "@channel3/sdk";
 
 // Initialize with environment variable
 const client = new Channel3();
@@ -44,15 +43,136 @@ const clientWithKey = new Channel3({
 All top-level endpoints are available as properties on the client. For example, to use the `search` endpoint, you can do the following:
 
 ```typescript
-import Channel3 from '@channel3/sdk';
+import Channel3 from "@channel3/sdk";
 
 const client = new Channel3();
 
 async function main() {
   const response = await client.search.perform({
-    query: "organic cotton t-shirt"
+    query: "organic cotton t-shirt",
   });
 
+  console.log(response);
+}
+
+main();
+```
+
+## Advanced Usage
+
+### Search with filters
+
+```typescript
+import Channel3 from "@channel3/sdk";
+
+const client = new Channel3();
+
+async function main() {
+  const response = await client.search.perform({
+    query: "running shoes",
+    filters: {
+      brand_ids: [brand_id1, brand_id2],
+      gender: "unisex",
+      price: { min_price: 50.0, max_price: 150.0 },
+      availability: ["InStock", "LimitedAvailability"],
+    },
+    limit: 20,
+  });
+  console.log(response);
+}
+
+main();
+```
+
+### Search with an image URL
+
+```typescript
+import Channel3 from "@channel3/sdk";
+
+const client = new Channel3();
+
+async function main() {
+  const response = await client.search.perform({
+    image_url: "https://example.com/images/shoe.jpg",
+    limit: 12,
+  });
+  console.log(response);
+}
+
+main();
+```
+
+### Search with a base64 image
+
+```typescript
+import fs from "node:fs";
+import Channel3 from "@channel3/sdk";
+
+const client = new Channel3();
+
+async function main() {
+  const b64 = fs.readFileSync("shoe.jpg").toString("base64");
+  const response = await client.search.perform({
+    base64_image: b64,
+    limit: 12,
+  });
+  console.log(response);
+}
+
+main();
+```
+
+### Configure search behavior
+
+```typescript
+import Channel3 from "@channel3/sdk";
+
+const client = new Channel3();
+
+async function main() {
+  const response = await client.search.perform({
+    query: "linen shirt",
+    config: {
+      enrich_query: false, // default true
+      semantic_search: true, // default true
+    },
+  });
+  console.log(response);
+}
+
+main();
+```
+
+### Provide request context
+
+```typescript
+import Channel3 from "@channel3/sdk";
+
+const client = new Channel3();
+
+async function main() {
+  const response = await client.search.perform({
+    query: "sneakers",
+    context: "Free text describing the end-user who the search is for.",
+    limit: 10,
+  });
+  console.log(response);
+}
+
+main();
+```
+
+### Enrich a product URL
+
+```typescript
+import Channel3 from "@channel3/sdk";
+
+const client = new Channel3();
+
+async function main() {
+  const response = await client.enrich.perform({
+    url: "https://brand.com/products/linen-shirt",
+  });
   console.log(response);
 }
 
@@ -64,12 +184,13 @@ main();
 This library includes TypeScript definitions for all request params and response fields. You may import and use them like so:
 
 ```typescript
-import Channel3 from '@channel3/sdk';
+import Channel3 from "@channel3/sdk";
 
 const client = new Channel3();
 
 async function main() {
-  const response: Channel3.SearchPerformResponse = await client.search.perform();
+  const response: Channel3.SearchPerformResponse =
+    await client.search.perform();
   console.log(response);
 }
 
@@ -81,7 +202,7 @@ main();
 When the library is unable to connect to the API, or if the API returns a non-success status code (i.e., 4xx or 5xx response), a subclass of `APIError` will be thrown.
 
 ```typescript
-import Channel3 from '@channel3/sdk';
+import Channel3 from "@channel3/sdk";
 
 const client = new Channel3();
 
@@ -101,18 +222,19 @@ async function main() {
 
 main();
 ```
+
 Error codes are as follows:
 
-| Status Code | Error Type               |
-|-------------|--------------------------|
-| 400         | `BadRequestError`        |
-| 401         | `AuthenticationError`    |
-| 403         | `PermissionDeniedError`  |
-| 404         | `NotFoundError`          |
-| 422         | `UnprocessableEntityError`|
-| 429         | `RateLimitError`         |
-| >=500       | `InternalServerError`    |
-| N/A         | `APIConnectionError`     |
+| Status Code | Error Type                 |
+| ----------- | -------------------------- |
+| 400         | `BadRequestError`          |
+| 401         | `AuthenticationError`      |
+| 403         | `PermissionDeniedError`    |
+| 404         | `NotFoundError`            |
+| 422         | `UnprocessableEntityError` |
+| 429         | `RateLimitError`           |
+| >=500       | `InternalServerError`      |
+| N/A         | `APIConnectionError`       |
 
 ## Retries
 

@@ -3,15 +3,20 @@ title: "Python SDK Quickstart"
 description: "Get started with the Channel3 Python SDK to search and retrieve product information."
 ---
 
-The Channel3 Python SDK, generated with [Stainless](https://www.stainless.com/), provides convenient access to the Channel3 REST API from Python.
-
 ## Installation
 
-Install the SDK using pip:
+You can install the SDK using your preferred tool:
 
-```bash
-pip install channel3-sdk
+<CodeGroup>
+```bash pip
+pip install channel3_sdk
 ```
+
+```bash uv
+uv add channel3_sdk
+```
+
+</CodeGroup>
 
 ## Authentication
 
@@ -65,6 +70,131 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+```
+
+## Advanced Usage
+
+### Search with filters
+
+```python
+from channel3_sdk import Channel3
+
+client = Channel3()
+
+def main():
+    response = client.search.perform(
+        query="running shoes",
+        filters=Filters(
+            availability=[AvailabilityStatus.IN_STOCK],
+            price=FiltersPrice(
+                min_price=10,
+                max_price=50,
+            ),
+            gender="male",
+        ),
+        limit=20,
+    )
+    print(response)
+
+if __name__ == "__main__":
+    main()
+```
+
+### Search with an image URL
+
+```python
+from channel3_sdk import Channel3
+
+client = Channel3()
+
+def main():
+    response = client.search.perform(
+        image_url="https://example.com/images/shoe.jpg",
+        limit=12,
+    )
+    print(response)
+
+if __name__ == "__main__":
+    main()
+```
+
+### Search with a base64 image
+
+```python
+import base64
+from channel3_sdk import Channel3
+
+client = Channel3()
+
+def main():
+    with open("shoe.jpg", "rb") as f:
+        b64 = base64.b64encode(f.read()).decode("utf-8")
+
+    response = client.search.perform(
+        base64_image=b64,
+        limit=12,
+    )
+    print(response)
+
+if __name__ == "__main__":
+    main()
+```
+
+### Configure search behavior
+
+```python
+from channel3_sdk import Channel3
+
+client = Channel3()
+
+def main():
+    response = client.search.perform(
+        query="linen shirt",
+        config={
+            "enrich_query": False,  # default True
+            "semantic_search": True,  # default True
+        },
+    )
+    print(response)
+
+if __name__ == "__main__":
+    main()
+```
+
+### Provide request context
+
+```python
+from channel3_sdk import Channel3
+
+client = Channel3()
+
+def main():
+    response = client.search.perform(
+        query="sneakers",
+        context="vip-customer-123",
+        limit=10,
+    )
+    print(response)
+
+if __name__ == "__main__":
+    main()
+```
+
+### Enrich a product URL
+
+```python
+from channel3_sdk import Channel3
+
+client = Channel3()
+
+def main():
+    response = client.enrich.perform(
+        url="https://brand.com/products/linen-shirt"
+    )
+    print(response)
+
+if __name__ == "__main__":
+    main()
 ```
 
 ## Error Handling
