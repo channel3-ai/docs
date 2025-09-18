@@ -5,486 +5,218 @@ description: "Get started with the Channel3 Python SDK to search and retrieve pr
 
 ## Installation
 
-Install the SDK using pip or poetry:
+You can install the SDK using your preferred tool:
 
 <CodeGroup>
 ```bash pip
 pip install channel3-sdk
 ```
 
-```bash poetry
-poetry add channel3-sdk
+```bash uv
+uv add channel3-sdk
 ```
 
 </CodeGroup>
 
 ## Authentication
 
-### Getting Your API Key
-
-<Card
-  title="Generate Your API Key"
-  icon="key"
-  href="https://trychannel3.com/dashboard/api"
->
-  Grab your API key from your Channel3 dashboard if you haven't already.
-</Card>
-
-You can provide your API key directly in code or via the `CHANNEL3_API_KEY` environment variable (recommended for production).
+You can provide your API key using the `CHANNEL3_API_KEY` environment variable, or by passing it directly to the client.
 
 ```python
-from channel3_sdk import Channel3Client, AsyncChannel3Client
+from channel3_sdk import Channel3, AsyncChannel3
 
-# Synchronous client
-client = Channel3Client(api_key="your_api_key_here")
-# or using environment variable
-client = Channel3Client()
+# Initialize with environment variable
+client = Channel3()
 
-# Asynchronous client
-async_client = AsyncChannel3Client(api_key="your_api_key_here")
-# or using environment variable
-async_client = AsyncChannel3Client()
+# Or, initialize with API key directly
+client_with_key = Channel3(api_key="your_api_key_here")
+
+# Async client
+async_client = AsyncChannel3()
 ```
 
-## Search
+## Usage
 
-### Text Search
-
-Search for products using text queries:
+All top-level endpoints are available as properties on the client. For example, to use the `search` endpoint, you can do the following:
 
 ```python
-from channel3_sdk import Channel3Client
+from channel3_sdk import Channel3
 
-client = Channel3Client(api_key="your_api_key_here")
+client = Channel3()
 
-# Basic text search
-products = client.search(query="organic cotton t-shirt")
-
-for product in products:
-    print(f"Title: {product.title}")
-    print(f"Brand: {product.brand_name}")
-    print(f"Score: {product.score}")
-```
-
-### Image Search
-
-#### Image URL
-
-Search using an image URL:
-
-```python
-client = Channel3Client(api_key="your_api_key_here")
-
-image_url = "https://example.com/product-image.jpg"
-products = client.search(image_url=image_url)
-
-for product in products:
-    print(f"Similar product: {product.title}")
-```
-
-#### Base64
-
-Search using a base64-encoded image:
-
-```python
-import base64
-from channel3_sdk import Channel3Client
-
-client = Channel3Client(api_key="your_api_key_here")
-
-# Read and encode local image file
-with open("product_image.jpg", "rb") as image_file:
-    image_data = base64.b64encode(image_file.read()).decode('utf-8')
-
-products = client.search(base64_image=image_data)
-
-for product in products:
-    print(f"Similar product: {product.title}")
-```
-
-### Multimodal Search
-
-Combine text and image search for more precise results:
-
-```python
-client = Channel3Client(api_key="your_api_key_here")
-
-products = client.search(
-    query="summer floral dress",
-    image_url="https://example.com/dress-pattern.jpg"
-)
-
-for product in products:
-    print(f"Match: {product.title}")
-```
-
-## Filters
-
-Use filters to narrow down search results:
-
-### Brand
-
-```python
-from channel3_sdk import Channel3Client, SearchFilters
-
-client = Channel3Client(api_key="your_api_key_here")
-
-filters = SearchFilters(brand_ids=[brand_id_1, brand_id_2])
-products = client.search(query="running shoes", filters=filters)
-```
-
-<Tip>
-  Use brand IDs from the brands endpoints or dashboard. Names are not accepted.
-</Tip>
-
-### Price
-
-```python
-from channel3_sdk import SearchFilterPrice
-
-filters = SearchFilters(
-    price=SearchFilterPrice(
-        min_price=25.0,
-        max_price=150.0
+def main():
+    response = client.search.perform(
+        query="organic cotton t-shirt"
     )
-)
-products = client.search(query="sneakers", filters=filters)
+    print(response)
+
+if __name__ == "__main__":
+    main()
 ```
 
-### Gender
-
-```python
-filters = SearchFilters(gender="female")
-products = client.search(query="athletic wear", filters=filters)
-```
-
-### Availability
-
-```python
-filters = SearchFilters(availability=["InStock"])
-products = client.search(query="backpack", filters=filters)
-```
-
-<Tip>
-  The availability filter should be an array containing one or more of the
-  following values: - "InStock" - "LimitedAvailability" - "PreOrder" -
-  "BackOrder" - "SoldOut" - "OutOfStock" - "Discontinued" - "Unknown" Example:
-  `availability=["InStock", "PreOrder"]` to find products that are either in
-  stock or available for pre-order.
-</Tip>
-
-### Combined Filters
-
-```python
-filters = SearchFilters(
-    brand_ids=["brand_id_1", "brand_id_2"],
-    price=SearchFilterPrice(min_price=50.0, max_price=200.0),
-    gender="male",
-    availability=["InStock"]
-)
-
-products = client.search(
-    query="outdoor jacket",
-    filters=filters,
-    limit=10
-)
-```
-
-## Product Detail
-
-Retrieve detailed information about a specific product:
-
-```python
-from channel3_sdk import Channel3Client, Channel3NotFoundError
-
-client = Channel3Client(api_key="your_api_key_here")
-
-try:
-    product = client.get_product("product_id_here")
-
-    print(f"Title: {product.title}")
-    print(f"Description: {product.description}")
-    print(f"Brand: {product.brand_name}")
-    print(f"Materials: {product.materials}")
-    print(f"Key Features: {product.key_features}")
-    print(f"Gender: {product.gender}")
-
-    if product.image_urls:
-        print(f"Images: {product.image_urls}")
-
-
-except Channel3NotFoundError:
-    print("Product not found")
-```
-
-## Brands
-
-### Get All Brands
-
-Retrieve all brands that the vendor currently sells with optional filtering and pagination:
-
-```python
-from channel3_sdk import Channel3Client
-
-client = Channel3Client(api_key="your_api_key_here")
-
-# Get all brands (paginated response)
-brands_page = client.get_brands()
-print(f"Total brands: {brands_page.total} (page {brands_page.page} size {brands_page.size})")
-
-for brand in brands_page.items:
-    print(f"Brand: {brand.name}")
-    print(f"ID: {brand.id}")
-    if brand.description:
-        print(f"Description: {brand.description}")
-
-# Get brands with query filter
-brands_page = client.get_brands(query="nike")
-
-# Get brands with pagination
-brands_page = client.get_brands(page=2, size=50)
-
-# Combined filtering and pagination
-brands_page = client.get_brands(
-    query="athletic wear",
-    page=1,
-    size=25
-)
-```
-
-### Get Brand Details
-
-Retrieve detailed information about a specific brand:
-
-```python
-from channel3_sdk import Channel3Client, Channel3NotFoundError
-
-client = Channel3Client(api_key="your_api_key_here")
-
-try:
-    brand = client.get_brand("brand_id_here")
-
-    print(f"Brand Name: {brand.name}")
-    print(f"Brand ID: {brand.id}")
-
-    if brand.description:
-        print(f"Description: {brand.description}")
-
-    if brand.website:
-        print(f"Website: {brand.website}")
-
-    if brand.logo_url:
-        print(f"Logo: {brand.logo_url}")
-
-    print(f"Product Count: {brand.product_count}")
-
-except Channel3NotFoundError:
-    print("Brand not found")
-```
-
-### Using Brand IDs in Search Filters
-
-Use brand IDs obtained from the brands endpoints in your search filters:
-
-```python
-from channel3_sdk import Channel3Client, SearchFilters
-
-client = Channel3Client(api_key="your_api_key_here")
-
-# First, get available brands
-brands_page = client.get_brands(query="athletic")
-brand_ids = [brand.id for brand in brands_page.items[:3]]  # Take first 3 brands
-
-# Use brand IDs in search filters
-filters = SearchFilters(brand_ids=brand_ids)
-products = client.search(query="running shoes", filters=filters)
-
-for product in products:
-    print(f"Product: {product.title}")
-    print(f"Brand: {product.brand_name}")
-```
-
-<Tip>
-  Brand IDs are stable identifiers that you can cache and reuse. They won't
-  change.
-</Tip>
-
-## Errors
-
-Handle common exceptions gracefully:
-
-```python
-from channel3_sdk import (
-    Channel3Client,
-    Channel3AuthenticationError,
-    Channel3ValidationError,
-    Channel3NotFoundError,
-    Channel3ServerError,
-    Channel3ConnectionError
-)
-
-client = Channel3Client(api_key="your_api_key_here")
-
-try:
-    products = client.search(query="laptop")
-    print(f"Found {len(products)} products")
-
-except Channel3AuthenticationError:
-    print("Invalid API key")
-
-except Channel3ValidationError as e:
-    print(f"Validation error: {e.message}")
-
-except Channel3NotFoundError:
-    print("Resource not found")
-
-except Channel3ServerError:
-    print("Server error - please try again later")
-
-except Channel3ConnectionError:
-    print("Connection error - check your internet connection")
-
-except Exception as e:
-    print(f"Unexpected error: {e}")
-```
-
-## Complete Example
-
-Here's a comprehensive example demonstrating search, filtering, and error handling:
+### Async Usage
 
 ```python
 import asyncio
-from channel3_sdk import (
-    AsyncChannel3Client,
-    SearchFilters,
-    SearchFilterPrice,
-    Channel3AuthenticationError,
-    Channel3ValidationError,
-    Channel3NotFoundError,
-    Channel3ServerError,
-    Channel3ConnectionError
-)
+from channel3_sdk import AsyncChannel3
+
+client = AsyncChannel3()
 
 async def main():
-    try:
-        # Initialize client
-        client = AsyncChannel3Client(api_key="your_api_key_here")
-
-        # Search with comprehensive filters
-        filters = SearchFilters(
-            brand_ids=["brand_id_1", "brand_id_2"],
-            price=SearchFilterPrice(min_price=80.0, max_price=200.0),
-            gender="male",
-            availability=["InStock"]
-        )
-
-        print("Searching for men's running shoes...")
-        products = await client.search(
-            query="running shoes",
-            filters=filters,
-            limit=5
-        )
-
-        print(f"Found {len(products)} products")
-
-        # Display search results
-        for i, product in enumerate(products, 1):
-            print(f"\n{i}. {product.title}")
-            print(f"   Brand: {product.brand_name}")
-            print(f"   Score: {product.score}")
-
-            if product.price:
-                print(f"   Price: ${product.price.price} {product.price.currency}")
-
-            if product.availability:
-                print(f"   Availability: {product.availability}")
-
-        # Get detailed information for the first product
-        if products:
-            product_id = products[0].id
-            print(f"\nFetching detailed information for: {products[0].title}")
-
-            try:
-                detailed_product = await client.get_product(product_id)
-
-                print(f"Description: {detailed_product.description}")
-                print(f"Materials: {detailed_product.materials}")
-                print(f"Key Features: {detailed_product.key_features}")
-
-                if detailed_product.image_urls:
-                    print(f"Images: {len(detailed_product.image_urls)} available")
-
-            except Channel3NotFoundError:
-                print("Product details not found")
-
-        # Example multimodal search
-        print("\nPerforming multimodal search...")
-        multimodal_products = await client.search(
-            query="black athletic sneakers",
-            image_url="https://example.com/sneaker-image.jpg",
-            limit=3
-        )
-
-        print(f"Multimodal search found {len(multimodal_products)} products")
-        for product in multimodal_products:
-            print(f"- {product.title}")
-
-        # Example brand operations
-        print("\nFetching brand information...")
-
-        # Get all brands with pagination
-        brands_page = await client.get_brands(query="athletic", page=1, size=10)
-        print(f"Found {brands_page.total} athletic brands (showing {len(brands_page.items)} items)")
-
-        for brand in brands_page.items[:3]:
-            print(f"- {brand.name} (ID: {brand.id})")
-
-        # Get detailed brand information
-        if brands_page.items:
-            brand_id = brands_page.items[0].id
-            try:
-                detailed_brand = await client.get_brand(brand_id)
-                print(f"\nBrand Details for: {detailed_brand.name}")
-                if detailed_brand.description:
-                    print(f"Description: {detailed_brand.description}")
-                print(f"Product Count: {detailed_brand.product_count}")
-
-            except Channel3NotFoundError:
-                print("Brand details not found")
-
-        # Search using specific brand filters
-        if brands_page.items:
-            brand_ids = [brand.id for brand in brands_page.items[:2]]
-            brand_filtered_products = await client.search(
-                query="running shoes",
-                filters=SearchFilters(brand_ids=brand_ids),
-                limit=5
-            )
-            print(f"\nBrand-filtered search found {len(brand_filtered_products)} products")
-            for product in brand_filtered_products:
-                print(f"- {product.title} ({product.brand_name})")
-
-    except Channel3AuthenticationError:
-        print("Authentication failed. Please check your API key.")
-
-    except Channel3ValidationError as e:
-        print(f"Validation error: {e.message}")
-        print("Please check your search parameters.")
-
-    except Channel3ServerError:
-        print("Server error occurred. Please try again later.")
-
-    except Channel3ConnectionError:
-        print("Connection error. Please check your internet connection.")
-
-    except Exception as e:
-        print(f"Unexpected error: {e}")
-
-    finally:
-        print("\nSearch completed.")
+    response = await client.search.perform(
+        query="organic cotton t-shirt"
+    )
+    print(response)
 
 if __name__ == "__main__":
     asyncio.run(main())
 ```
 
-You're now ready to integrate Channel3's powerful product search capabilities into your applications!
+## Advanced Usage
+
+### Search with filters
+
+```python
+from channel3_sdk import Channel3
+
+client = Channel3()
+
+def main():
+    response = client.search.perform(
+        query="running shoes",
+        filters=Filters(
+            availability=[AvailabilityStatus.IN_STOCK],
+            price=FiltersPrice(
+                min_price=10,
+                max_price=50,
+            ),
+            gender="male",
+        ),
+        limit=20,
+    )
+    print(response)
+
+if __name__ == "__main__":
+    main()
+```
+
+### Search with an image URL
+
+```python
+from channel3_sdk import Channel3
+
+client = Channel3()
+
+def main():
+    response = client.search.perform(
+        image_url="https://example.com/images/shoe.jpg",
+        limit=12,
+    )
+    print(response)
+
+if __name__ == "__main__":
+    main()
+```
+
+### Search with a base64 image
+
+```python
+import base64
+from channel3_sdk import Channel3
+
+client = Channel3()
+
+def main():
+    with open("shoe.jpg", "rb") as f:
+        b64 = base64.b64encode(f.read()).decode("utf-8")
+
+    response = client.search.perform(
+        base64_image=b64,
+        limit=12,
+    )
+    print(response)
+
+if __name__ == "__main__":
+    main()
+```
+
+### Configure search behavior
+
+```python
+from channel3_sdk import Channel3
+
+client = Channel3()
+
+def main():
+    response = client.search.perform(
+        query="linen shirt",
+        config={
+            "enrich_query": False,  # default True
+            "semantic_search": True,  # default True
+        },
+    )
+    print(response)
+
+if __name__ == "__main__":
+    main()
+```
+
+### Provide request context
+
+```python
+from channel3_sdk import Channel3
+
+client = Channel3()
+
+def main():
+    response = client.search.perform(
+        query="sneakers",
+        context="vip-customer-123",
+        limit=10,
+    )
+    print(response)
+
+if __name__ == "__main__":
+    main()
+```
+
+### Enrich a product URL
+
+```python
+from channel3_sdk import Channel3
+
+client = Channel3()
+
+def main():
+    response = client.enrich.perform(
+        url="https://brand.com/products/linen-shirt"
+    )
+    print(response)
+
+if __name__ == "__main__":
+    main()
+```
+
+## Error Handling
+
+When the library is unable to connect to the API, or if the API returns a non-success status code (i.e., 4xx or 5xx response), a subclass of `APIError` will be thrown.
+
+```python
+from channel3_sdk import Channel3
+from channel3_sdk.errors import APIError
+
+client = Channel3()
+
+def main():
+    try:
+        client.search.perform()
+    except APIError as e:
+        print(f"Status code: {e.status_code}")
+        print(f"Error name: {e.request.body.get('error', {}).get('type')}")
+        print(f"Headers: {e.headers}")
+
+if __name__ == "__main__":
+    main()
+```
+
+Error types are exposed on the `channel3.errors` module.
