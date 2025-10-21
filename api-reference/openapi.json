@@ -726,6 +726,11 @@
         "title": "ProductDetail",
         "description": "A product with detailed information"
       },
+      "RedirectMode": {
+        "type": "string",
+        "enum": ["brand", "price", "commission"],
+        "title": "RedirectMode"
+      },
       "SearchConfig": {
         "properties": {
           "enrich_query": {
@@ -737,6 +742,13 @@
             "type": "boolean",
             "title": "Semantic Search",
             "default": true
+          },
+          "redirect_mode": {
+            "anyOf": [
+              { "$ref": "#/components/schemas/RedirectMode" },
+              { "type": "null" }
+            ],
+            "description": "Optional redirect mode. \"brand\" redirects to the brand's product page, \"price\" redirects to the lowest priced product, \"commission\" redirects to the product page with the highest commission rate"
           }
         },
         "type": "object",
@@ -794,6 +806,14 @@
             ],
             "title": "Availability",
             "description": "List of availability statuses"
+          },
+          "exclude_product_ids": {
+            "anyOf": [
+              { "items": { "type": "string" }, "type": "array" },
+              { "type": "null" }
+            ],
+            "title": "Exclude Product Ids",
+            "description": "List of product IDs to exclude"
           }
         },
         "type": "object",
