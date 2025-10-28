@@ -559,24 +559,56 @@
       },
       "EnrichedProduct": {
         "properties": {
+          "id": { "type": "string", "title": "Id" },
+          "title": { "type": "string", "title": "Title" },
           "url": { "type": "string", "title": "Url" },
-          "main_image_url": { "type": "string", "title": "Main Image Url" },
-          "other_image_urls": {
-            "items": { "type": "string" },
-            "type": "array",
-            "title": "Other Image Urls"
+          "brand_id": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Brand Id"
+          },
+          "brand_name": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Brand Name"
+          },
+          "image_urls": {
+            "anyOf": [
+              { "items": { "type": "string" }, "type": "array" },
+              { "type": "null" }
+            ],
+            "title": "Image Urls"
           },
           "price": { "$ref": "#/components/schemas/Price" },
-          "title": { "type": "string", "title": "Title" }
+          "availability": { "$ref": "#/components/schemas/AvailabilityStatus" },
+          "gender": {
+            "anyOf": [
+              { "type": "string", "enum": ["male", "female", "unisex"] },
+              { "type": "null" }
+            ],
+            "title": "Gender"
+          },
+          "materials": {
+            "anyOf": [
+              { "items": { "type": "string" }, "type": "array" },
+              { "type": "null" }
+            ],
+            "title": "Materials"
+          },
+          "key_features": {
+            "anyOf": [
+              { "items": { "type": "string" }, "type": "array" },
+              { "type": "null" }
+            ],
+            "title": "Key Features"
+          },
+          "variants": {
+            "items": { "$ref": "#/components/schemas/Variant" },
+            "type": "array",
+            "title": "Variants",
+            "default": []
+          }
         },
         "type": "object",
-        "required": [
-          "url",
-          "main_image_url",
-          "other_image_urls",
-          "price",
-          "title"
-        ],
+        "required": ["id", "title", "url", "price", "availability"],
         "title": "EnrichedProduct"
       },
       "ErrorResponse": {
@@ -729,7 +761,8 @@
       "RedirectMode": {
         "type": "string",
         "enum": ["brand", "price", "commission"],
-        "title": "RedirectMode"
+        "title": "RedirectMode",
+        "description": "\"price\" redirects to the product page with the lowest price\n\"commission\" redirects to the product page with the highest commission rate\n\"brand\" redirects to the brand's product page"
       },
       "SearchConfig": {
         "properties": {
