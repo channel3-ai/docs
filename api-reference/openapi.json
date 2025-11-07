@@ -204,34 +204,19 @@
         }
       }
     },
-    "/v0/brands": {
+    "/v0/websites": {
       "get": {
         "tags": ["channel3-api"],
-        "summary": "Get Brands",
-        "description": "Get all brands that the vendor currently sells.",
-        "operationId": "get_brands_v0_brands_get",
+        "summary": "Find Website By Url",
+        "description": "Find a website by URL.",
+        "operationId": "find_website_by_url_v0_websites_get",
         "security": [{ "APIKeyHeader": [] }],
         "parameters": [
           {
             "name": "query",
             "in": "query",
-            "required": false,
-            "schema": {
-              "anyOf": [{ "type": "string" }, { "type": "null" }],
-              "title": "Query"
-            }
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "required": false,
-            "schema": { "type": "integer", "default": 1, "title": "Page" }
-          },
-          {
-            "name": "size",
-            "in": "query",
-            "required": false,
-            "schema": { "type": "integer", "default": 100, "title": "Size" }
+            "required": true,
+            "schema": { "type": "string", "title": "Query" }
           }
         ],
         "responses": {
@@ -239,9 +224,7 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PaginatedResponse_Brand_"
-                }
+                "schema": { "$ref": "#/components/schemas/Website" }
               }
             }
           },
@@ -300,6 +283,110 @@
             "content": {
               "application/json": {
                 "example": { "detail": "Internal Server Error" },
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          },
+          "404": {
+            "description": "Website not found",
+            "content": {
+              "application/json": {
+                "example": { "detail": "No website found matching 'acme'" },
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v0/brands": {
+      "get": {
+        "tags": ["channel3-api"],
+        "summary": "Find Brand By Name",
+        "description": "Find a brand by name.",
+        "operationId": "find_brand_by_name_v0_brands_get",
+        "security": [{ "APIKeyHeader": [] }],
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string", "title": "Query" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Brand" }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing authentication",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "missing_key": {
+                    "summary": "Missing API Key",
+                    "value": {
+                      "detail": "Unauthorized. Missing authentication key. Make sure to attach an x-api-key with your request. Need help? Reach out to founders@trychannel3.com."
+                    }
+                  },
+                  "invalid_key": {
+                    "summary": "Invalid API Key",
+                    "value": {
+                      "detail": "API key was provided but is invalid. Need help? Reach out to founders@trychannel3.com."
+                    }
+                  }
+                },
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment required",
+            "content": {
+              "application/json": {
+                "example": {
+                  "detail": "You have used all of your free credits. Add a payment method to continue."
+                },
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "detail": [
+                    {
+                      "loc": ["body", "query"],
+                      "msg": "field required",
+                      "type": "value_error.missing"
+                    }
+                  ]
+                },
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": { "detail": "Internal Server Error" },
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          },
+          "404": {
+            "description": "Brand not found",
+            "content": {
+              "application/json": {
+                "example": { "detail": "No brand found matching 'acme'" },
                 "schema": { "$ref": "#/components/schemas/ErrorResponse" }
               }
             }
@@ -406,7 +493,7 @@
       "post": {
         "tags": ["channel3-api"],
         "summary": "Enrich Product Url",
-        "description": "Enrich a product URL with additional information.",
+        "description": "Search by product URL, get back full product information from Channel3’s product database.",
         "operationId": "enrich_product_url_v0_enrich_post",
         "requestBody": {
           "content": {
@@ -539,10 +626,14 @@
           "description": {
             "anyOf": [{ "type": "string" }, { "type": "null" }],
             "title": "Description"
+          },
+          "max_commission_rate": {
+            "type": "number",
+            "title": "Max Commission Rate"
           }
         },
         "type": "object",
-        "required": ["id", "name"],
+        "required": ["id", "name", "max_commission_rate"],
         "title": "Brand"
       },
       "EnrichRequest": {
@@ -616,31 +707,6 @@
         "type": "object",
         "required": ["detail"],
         "title": "ErrorResponse"
-      },
-      "PaginatedResponse_Brand_": {
-        "properties": {
-          "items": {
-            "items": { "$ref": "#/components/schemas/Brand" },
-            "type": "array",
-            "title": "Items"
-          },
-          "pagination": { "$ref": "#/components/schemas/PaginationMeta" }
-        },
-        "type": "object",
-        "required": ["items", "pagination"],
-        "title": "PaginatedResponse[Brand]"
-      },
-      "PaginationMeta": {
-        "properties": {
-          "current_page": { "type": "integer", "title": "Current Page" },
-          "page_size": { "type": "integer", "title": "Page Size" },
-          "total_count": { "type": "integer", "title": "Total Count" },
-          "total_pages": { "type": "integer", "title": "Total Pages" }
-        },
-        "type": "object",
-        "required": ["current_page", "page_size", "total_count", "total_pages"],
-        "title": "PaginationMeta",
-        "description": "Pagination metadata for responses"
       },
       "Price": {
         "properties": {
@@ -847,6 +913,14 @@
             ],
             "title": "Exclude Product Ids",
             "description": "List of product IDs to exclude"
+          },
+          "category_ids": {
+            "anyOf": [
+              { "items": { "type": "string" }, "type": "array" },
+              { "type": "null" }
+            ],
+            "title": "Category Ids",
+            "description": "List of category identifiers (IDs or full paths) to include"
           }
         },
         "type": "object",
@@ -903,6 +977,19 @@
         "type": "object",
         "required": ["product_id", "title", "image_url"],
         "title": "Variant"
+      },
+      "Website": {
+        "properties": {
+          "id": { "type": "string", "title": "Id" },
+          "url": { "type": "string", "title": "Url" },
+          "max_commission_rate": {
+            "type": "number",
+            "title": "Max Commission Rate"
+          }
+        },
+        "type": "object",
+        "required": ["id", "url", "max_commission_rate"],
+        "title": "Website"
       }
     },
     "securitySchemes": {

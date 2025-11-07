@@ -8,6 +8,10 @@
     "dark": "#5D3FD3"
   },
   "favicon": "/favicon.svg",
+  "languages": [
+    { "label": "TypeScript", "syntax": "typescript" },
+    { "label": "Python", "syntax": "python" }
+  ],
 
   "contextual": {
     "options": ["copy", "view", "chatgpt", "claude", "cursor"]
@@ -15,32 +19,61 @@
   "navigation": {
     "groups": [
       {
-        "group": "Get Started",
-        "pages": ["index", "core-concepts"]
-      },
-      {
-        "group": "MCP",
-        "pages": ["mcp-overview"]
+        "group": "First steps",
+        "pages": ["index", "quickstart"]
       },
       {
         "group": "API",
         "pages": [
-          "api-reference/endpoint/search",
-          "api-reference/endpoint/enrich",
-          "api-reference/endpoint/product-detail",
-          "api-reference/endpoint/brands",
-          "api-reference/endpoint/brand-detail"
+          {
+            "group": "Product",
+            "pages": [
+              "api-reference/endpoint/search",
+              "api-reference/endpoint/product-detail",
+              "api-reference/endpoint/enrich"
+            ]
+          },
+          {
+            "group": "Brand",
+            "pages": [
+              "api-reference/endpoint/brands",
+              "api-reference/endpoint/brand-detail"
+            ]
+          },
+          "categories",
+          {
+            "group": "Websites",
+            "pages": ["api-reference/endpoint/websites"]
+          }
         ]
       },
       {
         "group": "SDK",
-        "pages": ["python-sdk", "typescript-sdk"]
+        "pages": ["sdk"]
+      },
+      {
+        "group": "MCP",
+        "pages": ["mcp-overview"]
       }
-    ]
+    ],
+    "global": {
+      "anchors": [
+        {
+          "anchor": "Website",
+          "icon": "globe",
+          "href": "https://trychannel3.com"
+        },
+        {
+          "anchor": "Support",
+          "icon": "envelope",
+          "href": "mailto:support@trychannel3.com"
+        }
+      ]
+    }
   },
   "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
+    "light": "/logo/small-light.svg",
+    "dark": "/logo/small-dark.svg"
   },
   "navbar": {
     "links": [

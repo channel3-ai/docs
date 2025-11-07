@@ -1,0 +1,444 @@
+---
+title: "SDK Guide"
+description: "Get started with the Channel3 SDKs for TypeScript and Python."
+---
+
+## Installation
+
+<CodeGroup>
+
+```typescript TypeScript
+// npm
+npm install @channel3/sdk
+
+// yarn
+yarn add @channel3/sdk
+
+// pnpm
+pnpm add @channel3/sdk
+```
+
+```python Python
+# pip
+pip install channel3-sdk
+
+# uv
+uv add channel3-sdk
+```
+
+</CodeGroup>
+
+## Authentication
+
+You can provide your API key using the `CHANNEL3_API_KEY` environment variable, or by passing it directly to the client.
+
+<CodeGroup>
+
+```typescript TypeScript
+import Channel3 from "@channel3/sdk";
+
+// Initialize with environment variable
+const client = new Channel3();
+
+// Or, initialize with API key directly
+const clientWithKey = new Channel3({
+  apiKey: "your_api_key_here",
+});
+```
+
+```python Python
+from channel3_sdk import Channel3, AsyncChannel3
+
+# Initialize with environment variable
+client = Channel3()
+
+# Or, initialize with API key directly
+client_with_key = Channel3(api_key="your_api_key_here")
+
+# Async client
+async_client = AsyncChannel3()
+```
+
+</CodeGroup>
+
+## Usage
+
+All top-level endpoints are available as properties on the client. For example, to use the `search` endpoint:
+
+<CodeGroup>
+
+```typescript TypeScript
+import Channel3 from "@channel3/sdk";
+
+const client = new Channel3();
+
+async function main() {
+  const response = await client.search.perform({
+    query: "organic cotton t-shirt",
+  });
+
+  console.log(response);
+}
+
+main();
+```
+
+```python Python
+from channel3_sdk import Channel3
+
+client = Channel3()
+
+def main():
+    response = client.search.perform(
+        query="organic cotton t-shirt"
+    )
+    print(response)
+
+if __name__ == "__main__":
+    main()
+```
+
+</CodeGroup>
+
+### Async Usage
+
+<CodeGroup>
+
+```typescript TypeScript
+import Channel3 from "@channel3/sdk";
+
+const client = new Channel3();
+
+async function main() {
+  const response = await client.search.perform({
+    query: "organic cotton t-shirt",
+  });
+  console.log(response);
+}
+
+main();
+```
+
+```python Python
+import asyncio
+from channel3_sdk import AsyncChannel3
+
+client = AsyncChannel3()
+
+async def main():
+    response = await client.search.perform(
+        query="organic cotton t-shirt"
+    )
+    print(response)
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+</CodeGroup>
+
+## Advanced Usage
+
+### Search with filters
+
+<CodeGroup>
+
+```typescript TypeScript
+import Channel3 from "@channel3/sdk";
+
+const client = new Channel3();
+
+async function main() {
+  const response = await client.search.perform({
+    query: "running shoes",
+    filters: {
+      brand_ids: [brand_id1, brand_id2],
+      gender: "unisex",
+      price: { min_price: 50.0, max_price: 150.0 },
+      availability: ["InStock", "LimitedAvailability"],
+    },
+    limit: 20,
+  });
+  console.log(response);
+}
+
+main();
+```
+
+```python Python
+from channel3_sdk import Channel3
+
+client = Channel3()
+
+def main():
+    response = client.search.perform(
+        query="running shoes",
+        filters=Filters(
+            availability=[AvailabilityStatus.IN_STOCK],
+            price=FiltersPrice(
+                min_price=10,
+                max_price=50,
+            ),
+            gender="male",
+        ),
+        limit=20,
+    )
+    print(response)
+
+if __name__ == "__main__":
+    main()
+```
+
+</CodeGroup>
+
+### Search with an image URL
+
+<CodeGroup>
+
+```typescript TypeScript
+import Channel3 from "@channel3/sdk";
+
+const client = new Channel3();
+
+async function main() {
+  const response = await client.search.perform({
+    image_url: "https://example.com/images/shoe.jpg",
+    limit: 12,
+  });
+  console.log(response);
+}
+
+main();
+```
+
+```python Python
+from channel3_sdk import Channel3
+
+client = Channel3()
+
+def main():
+    response = client.search.perform(
+        image_url="https://example.com/images/shoe.jpg",
+        limit=12,
+    )
+    print(response)
+
+if __name__ == "__main__":
+    main()
+```
+
+</CodeGroup>
+
+### Search with a base64 image
+
+<CodeGroup>
+
+```typescript TypeScript
+import fs from "node:fs";
+import Channel3 from "@channel3/sdk";
+
+const client = new Channel3();
+
+async function main() {
+  const b64 = fs.readFileSync("shoe.jpg").toString("base64");
+  const response = await client.search.perform({
+    base64_image: b64,
+    limit: 12,
+  });
+  console.log(response);
+}
+
+main();
+```
+
+```python Python
+import base64
+from channel3_sdk import Channel3
+
+client = Channel3()
+
+def main():
+    with open("shoe.jpg", "rb") as f:
+        b64 = base64.b64encode(f.read()).decode("utf-8")
+
+    response = client.search.perform(
+        base64_image=b64,
+        limit=12,
+    )
+    print(response)
+
+if __name__ == "__main__":
+    main()
+```
+
+</CodeGroup>
+
+### Configure search behavior
+
+<CodeGroup>
+
+```typescript TypeScript
+import Channel3 from "@channel3/sdk";
+
+const client = new Channel3();
+
+async function main() {
+  const response = await client.search.perform({
+    query: "linen shirt",
+    config: {
+      enrich_query: false, // default true
+      semantic_search: true, // default true
+    },
+  });
+  console.log(response);
+}
+
+main();
+```
+
+```python Python
+from channel3_sdk import Channel3
+
+client = Channel3()
+
+def main():
+    response = client.search.perform(
+        query="linen shirt",
+        config={
+            "enrich_query": False,  # default True
+            "semantic_search": True,  # default True
+        },
+    )
+    print(response)
+
+if __name__ == "__main__":
+    main()
+```
+
+</CodeGroup>
+
+### Provide request context
+
+<CodeGroup>
+
+```typescript TypeScript
+import Channel3 from "@channel3/sdk";
+
+const client = new Channel3();
+
+async function main() {
+  const response = await client.search.perform({
+    query: "sneakers",
+    context: "Free text describing the end-user who the search is for.",
+    limit: 10,
+  });
+  console.log(response);
+}
+
+main();
+```
+
+```python Python
+from channel3_sdk import Channel3
+
+client = Channel3()
+
+def main():
+    response = client.search.perform(
+        query="sneakers",
+        context="Brooklyn-based 24 year old, moderate budget, likes well-known brands",
+        limit=10,
+    )
+    print(response)
+
+if __name__ == "__main__":
+    main()
+```
+
+</CodeGroup>
+
+### Enrich a product URL
+
+<CodeGroup>
+
+```typescript TypeScript
+import Channel3 from "@channel3/sdk";
+
+const client = new Channel3();
+
+async function main() {
+  const response = await client.enrich.perform({
+    url: "https://brand.com/products/linen-shirt",
+  });
+  console.log(response);
+}
+
+main();
+```
+
+```python Python
+from channel3_sdk import Channel3
+
+client = Channel3()
+
+def main():
+    response = client.enrich.perform(
+        url="https://brand.com/products/linen-shirt"
+    )
+    print(response)
+
+if __name__ == "__main__":
+    main()
+```
+
+</CodeGroup>
+
+## Error Handling
+
+When the library is unable to connect to the API, or if the API returns a non-success status code (i.e., 4xx or 5xx response), an error will be thrown.
+
+<CodeGroup>
+
+```typescript TypeScript
+import Channel3 from "@channel3/sdk";
+
+const client = new Channel3();
+
+async function main() {
+  try {
+    await client.search.perform();
+  } catch (err) {
+    if (err instanceof Channel3.APIError) {
+      console.log(err.status); // 400
+      console.log(err.name); // BadRequestError
+      console.log(err.headers); // {server: 'nginx', ...}
+    } else {
+      throw err;
+    }
+  }
+}
+
+main();
+```
+
+```python Python
+from channel3_sdk import Channel3
+from channel3_sdk.errors import APIError
+
+client = Channel3()
+
+def main():
+    try:
+        client.search.perform()
+    except APIError as e:
+        print(f"Status code: {e.status_code}")
+        print(f"Error name: {e.request.body.get('error', {}).get('type')}")
+        print(f"Headers: {e.headers}")
+
+if __name__ == "__main__":
+    main()
+```
+
+</CodeGroup>
+
+<Note>Error types are exposed via each SDK's error module.</Note>
