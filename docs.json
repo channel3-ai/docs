@@ -35,10 +35,7 @@
           },
           {
             "group": "Brand",
-            "pages": [
-              "api-reference/endpoint/brands",
-              "api-reference/endpoint/brand-detail"
-            ]
+            "pages": ["api-reference/endpoint/brands"]
           },
           "categories",
           {
@@ -55,21 +52,7 @@
         "group": "MCP",
         "pages": ["mcp-overview"]
       }
-    ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Website",
-          "icon": "globe",
-          "href": "https://trychannel3.com"
-        },
-        {
-          "anchor": "Support",
-          "icon": "envelope",
-          "href": "mailto:support@trychannel3.com"
-        }
-      ]
-    }
+    ]
   },
   "logo": {
     "light": "/logo/small-light.svg",
@@ -79,7 +62,7 @@
     "links": [
       {
         "label": "Support",
-        "href": "mailto:founders@trychannel3.com"
+        "href": "mailto:support@trychannel3.com"
       }
     ],
     "primary": {

@@ -394,101 +394,6 @@
         }
       }
     },
-    "/v0/brands/{brand_id}": {
-      "get": {
-        "tags": ["channel3-api"],
-        "summary": "Get Brand Detail",
-        "description": "Get detailed information for a specific brand by its ID.",
-        "operationId": "get_brand_detail_v0_brands__brand_id__get",
-        "security": [{ "APIKeyHeader": [] }],
-        "parameters": [
-          {
-            "name": "brand_id",
-            "in": "path",
-            "required": true,
-            "schema": { "type": "string", "title": "Brand Id" }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": { "$ref": "#/components/schemas/Brand" }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized - Invalid or missing authentication",
-            "content": {
-              "application/json": {
-                "examples": {
-                  "missing_key": {
-                    "summary": "Missing API Key",
-                    "value": {
-                      "detail": "Unauthorized. Missing authentication key. Make sure to attach an x-api-key with your request. Need help? Reach out to founders@trychannel3.com."
-                    }
-                  },
-                  "invalid_key": {
-                    "summary": "Invalid API Key",
-                    "value": {
-                      "detail": "API key was provided but is invalid. Need help? Reach out to founders@trychannel3.com."
-                    }
-                  }
-                },
-                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
-              }
-            }
-          },
-          "402": {
-            "description": "Payment required",
-            "content": {
-              "application/json": {
-                "example": {
-                  "detail": "You have used all of your free credits. Add a payment method to continue."
-                },
-                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "example": {
-                  "detail": [
-                    {
-                      "loc": ["body", "query"],
-                      "msg": "field required",
-                      "type": "value_error.missing"
-                    }
-                  ]
-                },
-                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/json": {
-                "example": { "detail": "Internal Server Error" },
-                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
-              }
-            }
-          },
-          "404": {
-            "description": "Brand not found",
-            "content": {
-              "application/json": {
-                "example": { "detail": "Brand with ID 'xyz123' not found" },
-                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
-              }
-            }
-          }
-        }
-      }
-    },
     "/v0/enrich": {
       "post": {
         "tags": ["channel3-api"],
@@ -627,13 +532,15 @@
             "anyOf": [{ "type": "string" }, { "type": "null" }],
             "title": "Description"
           },
-          "max_commission_rate": {
+          "best_commission_rate": {
             "type": "number",
-            "title": "Max Commission Rate"
+            "title": "Best Commission Rate",
+            "description": "The maximum commission rate for the brand, as a percentage",
+            "default": 0.0
           }
         },
         "type": "object",
-        "required": ["id", "name", "max_commission_rate"],
+        "required": ["id", "name"],
         "title": "Brand"
       },
       "EnrichRequest": {
@@ -743,6 +650,12 @@
           "brand_name": { "type": "string", "title": "Brand Name" },
           "image_url": { "type": "string", "title": "Image Url" },
           "price": { "$ref": "#/components/schemas/Price" },
+          "categories": {
+            "items": { "type": "string" },
+            "type": "array",
+            "title": "Categories",
+            "default": []
+          },
           "availability": { "$ref": "#/components/schemas/AvailabilityStatus" },
           "variants": {
             "items": { "$ref": "#/components/schemas/Variant" },
@@ -783,13 +696,18 @@
             "title": "Brand Name"
           },
           "image_urls": {
-            "anyOf": [
-              { "items": { "type": "string" }, "type": "array" },
-              { "type": "null" }
-            ],
-            "title": "Image Urls"
+            "items": { "type": "string" },
+            "type": "array",
+            "title": "Image Urls",
+            "default": []
           },
           "price": { "$ref": "#/components/schemas/Price" },
+          "categories": {
+            "items": { "type": "string" },
+            "type": "array",
+            "title": "Categories",
+            "default": []
+          },
           "availability": { "$ref": "#/components/schemas/AvailabilityStatus" },
           "gender": {
             "anyOf": [
@@ -835,19 +753,21 @@
           "enrich_query": {
             "type": "boolean",
             "title": "Enrich Query",
+            "description": "If True, search will use AI to enrich the query, for example pulling the gender, brand, and price range from the query.",
             "default": true
           },
-          "semantic_search": {
+          "monetizable_only": {
             "type": "boolean",
-            "title": "Semantic Search",
-            "default": true
+            "title": "Monetizable Only",
+            "description": "If True, search will only consider products that offer commission.",
+            "default": false
           },
           "redirect_mode": {
             "anyOf": [
               { "$ref": "#/components/schemas/RedirectMode" },
               { "type": "null" }
             ],
-            "description": "Optional redirect mode. \"brand\" redirects to the brand's product page, \"price\" redirects to the lowest priced product, \"commission\" redirects to the product page with the highest commission rate"
+            "description": "If provided, links will redirect accordingly."
           }
         },
         "type": "object",
@@ -879,7 +799,7 @@
               { "type": "null" }
             ],
             "title": "Brand Ids",
-            "description": "List of brand IDs"
+            "description": "If provided, only products from these brands will be returned"
           },
           "gender": {
             "anyOf": [
@@ -888,12 +808,20 @@
             ],
             "title": "Gender"
           },
+          "condition": {
+            "anyOf": [
+              { "type": "string", "enum": ["new", "refurbished", "used"] },
+              { "type": "null" }
+            ],
+            "title": "Condition",
+            "description": "Filter by product condition. Incubating: condition data is currently incomplete; products without condition data will be included in all condition filter results."
+          },
           "price": {
             "anyOf": [
               { "$ref": "#/components/schemas/SearchFilterPrice" },
               { "type": "null" }
             ],
-            "description": "Price filter. Values are inclusive."
+            "description": "If provided, only products within this price range will be returned"
           },
           "availability": {
             "anyOf": [
@@ -904,15 +832,15 @@
               { "type": "null" }
             ],
             "title": "Availability",
-            "description": "List of availability statuses"
+            "description": "If provided, only products with these availability statuses will be returned"
           },
-          "exclude_product_ids": {
+          "website_ids": {
             "anyOf": [
               { "items": { "type": "string" }, "type": "array" },
               { "type": "null" }
             ],
-            "title": "Exclude Product Ids",
-            "description": "List of product IDs to exclude"
+            "title": "Website Ids",
+            "description": "If provided, only products from these websites will be returned"
           },
           "category_ids": {
             "anyOf": [
@@ -920,7 +848,15 @@
               { "type": "null" }
             ],
             "title": "Category Ids",
-            "description": "List of category identifiers (IDs or full paths) to include"
+            "description": "If provided, only products from these categories will be returned"
+          },
+          "exclude_product_ids": {
+            "anyOf": [
+              { "items": { "type": "string" }, "type": "array" },
+              { "type": "null" }
+            ],
+            "title": "Exclude Product Ids",
+            "description": "If provided, products with these IDs will be excluded from the results"
           }
         },
         "type": "object",
@@ -951,13 +887,13 @@
           },
           "filters": {
             "$ref": "#/components/schemas/SearchFilters",
-            "description": "Optional filters",
+            "description": "Optional filters. Search will only consider products that match all of the filters.",
             "default": {}
           },
           "config": {
             "$ref": "#/components/schemas/SearchConfig",
             "description": "Optional configuration",
-            "default": { "enrich_query": true, "semantic_search": true }
+            "default": { "enrich_query": true, "monetizable_only": false }
           },
           "context": {
             "anyOf": [{ "type": "string" }, { "type": "null" }],
@@ -982,13 +918,15 @@
         "properties": {
           "id": { "type": "string", "title": "Id" },
           "url": { "type": "string", "title": "Url" },
-          "max_commission_rate": {
+          "best_commission_rate": {
             "type": "number",
-            "title": "Max Commission Rate"
+            "title": "Best Commission Rate",
+            "description": "The maximum commission rate for the website, as a percentage",
+            "default": 0.0
           }
         },
         "type": "object",
-        "required": ["id", "url", "max_commission_rate"],
+        "required": ["id", "url"],
         "title": "Website"
       }
     },
