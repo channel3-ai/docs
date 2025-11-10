@@ -68,10 +68,15 @@ function renderAccordionForNode(id, nodesById, depth) {
     const titleText = `${escapeHtml(rawTitle)} (${escapeHtml(id)})`;
     body = `\n<small>${titleText} has no sub-categories</small>\n`;
   } else {
-    body =
-      "\n" +
-      renderAccordionGroupForSiblings(node.children, nodesById, depth + 1) +
-      "\n";
+    // Only render up to 2 levels (depth 0 and depth 1). Beyond that, show a CTA message.
+    if (depth >= 1) {
+      body = `\n<small>see all categories in your developer dashboard</small>\n`;
+    } else {
+      body =
+        "\n" +
+        renderAccordionGroupForSiblings(node.children, nodesById, depth + 1) +
+        "\n";
+    }
   }
 
   return `<Accordion title="${displayTitle}">\n${body}</Accordion>`;
