@@ -1,0 +1,73 @@
+---
+title: FAQ
+---
+
+## How does Channel3 track clicks, views, and sales?
+
+### URL format
+
+```text
+https://buy.trychannel3.com/<product_id>-<developer_id>
+```
+
+Example:
+
+```text
+https://buy.trychannel3.com/12345-67890
+```
+
+### What each part means
+
+- **product_id**: The identifier of the product you want a user to buy. You can get this from the Channel3 API or from the Dashboard when viewing a product.
+- **developer_id**: Your developer/account identifier so we can attribute commissions and analytics to you.
+
+### Important details
+
+- **One hyphen as the separator**: The single `-` character separates `product_id` and `developer_id`.
+- **IDs are opaque**: Use the IDs exactly as issued by Channel3. Do not alter, trim, or reformat them.
+- **Case sensitivity**: Treat IDs as case-sensitive. Copy them exactly from the API/Dashboard.
+
+### Where to find these IDs
+
+- **product_id**: Returned by the Search/Product APIs and visible in the Dashboard on product detail.
+- **developer_id**: Shown in the Dashboard under developer/account settings and returned by the API where applicable.
+
+### Query parameters
+
+You can append standard marketing parameters (e.g., `utm_source`, `utm_medium`, `utm_campaign`) to the URL. They will be preserved through the checkout flow.
+
+Example:
+
+```text
+https://buy.trychannel3.com/12345-67890?utm_source=newsletter&utm_medium=email
+```
+
+### Custom checkout domains
+
+If you have a custom checkout domain configured with Channel3, the same path structure applies. Only the hostname changes.
+
+```text
+https://buy.yourdomain.com/<product_id>-<developer_id>
+```
+
+### Error handling
+
+- If either ID is invalid or missing, the URL will not resolve and the user will see an error page (e.g., 404 or invalid link).
+- If the IDs are valid but the product is unavailable, the page will indicate that the item cannot be purchased.
+
+### Programmatic construction
+
+```js
+const productId = "<product_id>";
+const developerId = "<developer_id>";
+const checkoutUrl = `https://buy.trychannel3.com/${productId}-${developerId}`;
+```
+
+Use HTTPS and ensure you URL-encode any values you inject into the URL if they are not plain IDs.
+
+### Quick checklist
+
+- Use the exact `product_id` and `developer_id` you received from Channel3.
+- Join them with a single hyphen: `<product_id>-<developer_id>`.
+- Prefix with `https://buy.trychannel3.com/` (or your custom checkout domain).
+- Optionally add UTM params for attribution.

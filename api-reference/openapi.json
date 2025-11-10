@@ -204,34 +204,19 @@
         }
       }
     },
-    "/v0/brands": {
+    "/v0/websites": {
       "get": {
         "tags": ["channel3-api"],
-        "summary": "Get Brands",
-        "description": "Get all brands that the vendor currently sells.",
-        "operationId": "get_brands_v0_brands_get",
+        "summary": "Find Website By Url",
+        "description": "Find a website by URL.",
+        "operationId": "find_website_by_url_v0_websites_get",
         "security": [{ "APIKeyHeader": [] }],
         "parameters": [
           {
             "name": "query",
             "in": "query",
-            "required": false,
-            "schema": {
-              "anyOf": [{ "type": "string" }, { "type": "null" }],
-              "title": "Query"
-            }
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "required": false,
-            "schema": { "type": "integer", "default": 1, "title": "Page" }
-          },
-          {
-            "name": "size",
-            "in": "query",
-            "required": false,
-            "schema": { "type": "integer", "default": 100, "title": "Size" }
+            "required": true,
+            "schema": { "type": "string", "title": "Query" }
           }
         ],
         "responses": {
@@ -239,9 +224,7 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PaginatedResponse_Brand_"
-                }
+                "schema": { "$ref": "#/components/schemas/Website" }
               }
             }
           },
@@ -303,23 +286,32 @@
                 "schema": { "$ref": "#/components/schemas/ErrorResponse" }
               }
             }
+          },
+          "404": {
+            "description": "Website not found",
+            "content": {
+              "application/json": {
+                "example": { "detail": "No website found matching 'acme'" },
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
           }
         }
       }
     },
-    "/v0/brands/{brand_id}": {
+    "/v0/brands": {
       "get": {
         "tags": ["channel3-api"],
-        "summary": "Get Brand Detail",
-        "description": "Get detailed information for a specific brand by its ID.",
-        "operationId": "get_brand_detail_v0_brands__brand_id__get",
+        "summary": "Find Brand By Name",
+        "description": "Find a brand by name.",
+        "operationId": "find_brand_by_name_v0_brands_get",
         "security": [{ "APIKeyHeader": [] }],
         "parameters": [
           {
-            "name": "brand_id",
-            "in": "path",
+            "name": "query",
+            "in": "query",
             "required": true,
-            "schema": { "type": "string", "title": "Brand Id" }
+            "schema": { "type": "string", "title": "Query" }
           }
         ],
         "responses": {
@@ -394,7 +386,7 @@
             "description": "Brand not found",
             "content": {
               "application/json": {
-                "example": { "detail": "Brand with ID 'xyz123' not found" },
+                "example": { "detail": "No brand found matching 'acme'" },
                 "schema": { "$ref": "#/components/schemas/ErrorResponse" }
               }
             }
@@ -406,7 +398,7 @@
       "post": {
         "tags": ["channel3-api"],
         "summary": "Enrich Product Url",
-        "description": "Enrich a product URL with additional information.",
+        "description": "Search by product URL, get back full product information from Channel3’s product database.",
         "operationId": "enrich_product_url_v0_enrich_post",
         "requestBody": {
           "content": {
@@ -539,6 +531,12 @@
           "description": {
             "anyOf": [{ "type": "string" }, { "type": "null" }],
             "title": "Description"
+          },
+          "best_commission_rate": {
+            "type": "number",
+            "title": "Best Commission Rate",
+            "description": "The maximum commission rate for the brand, as a percentage",
+            "default": 0.0
           }
         },
         "type": "object",
@@ -617,31 +615,6 @@
         "required": ["detail"],
         "title": "ErrorResponse"
       },
-      "PaginatedResponse_Brand_": {
-        "properties": {
-          "items": {
-            "items": { "$ref": "#/components/schemas/Brand" },
-            "type": "array",
-            "title": "Items"
-          },
-          "pagination": { "$ref": "#/components/schemas/PaginationMeta" }
-        },
-        "type": "object",
-        "required": ["items", "pagination"],
-        "title": "PaginatedResponse[Brand]"
-      },
-      "PaginationMeta": {
-        "properties": {
-          "current_page": { "type": "integer", "title": "Current Page" },
-          "page_size": { "type": "integer", "title": "Page Size" },
-          "total_count": { "type": "integer", "title": "Total Count" },
-          "total_pages": { "type": "integer", "title": "Total Pages" }
-        },
-        "type": "object",
-        "required": ["current_page", "page_size", "total_count", "total_pages"],
-        "title": "PaginationMeta",
-        "description": "Pagination metadata for responses"
-      },
       "Price": {
         "properties": {
           "price": {
@@ -677,6 +650,12 @@
           "brand_name": { "type": "string", "title": "Brand Name" },
           "image_url": { "type": "string", "title": "Image Url" },
           "price": { "$ref": "#/components/schemas/Price" },
+          "categories": {
+            "items": { "type": "string" },
+            "type": "array",
+            "title": "Categories",
+            "default": []
+          },
           "availability": { "$ref": "#/components/schemas/AvailabilityStatus" },
           "variants": {
             "items": { "$ref": "#/components/schemas/Variant" },
@@ -717,13 +696,18 @@
             "title": "Brand Name"
           },
           "image_urls": {
-            "anyOf": [
-              { "items": { "type": "string" }, "type": "array" },
-              { "type": "null" }
-            ],
-            "title": "Image Urls"
+            "items": { "type": "string" },
+            "type": "array",
+            "title": "Image Urls",
+            "default": []
           },
           "price": { "$ref": "#/components/schemas/Price" },
+          "categories": {
+            "items": { "type": "string" },
+            "type": "array",
+            "title": "Categories",
+            "default": []
+          },
           "availability": { "$ref": "#/components/schemas/AvailabilityStatus" },
           "gender": {
             "anyOf": [
@@ -769,19 +753,21 @@
           "enrich_query": {
             "type": "boolean",
             "title": "Enrich Query",
+            "description": "If True, search will use AI to enrich the query, for example pulling the gender, brand, and price range from the query.",
             "default": true
           },
-          "semantic_search": {
+          "monetizable_only": {
             "type": "boolean",
-            "title": "Semantic Search",
-            "default": true
+            "title": "Monetizable Only",
+            "description": "If True, search will only consider products that offer commission.",
+            "default": false
           },
           "redirect_mode": {
             "anyOf": [
               { "$ref": "#/components/schemas/RedirectMode" },
               { "type": "null" }
             ],
-            "description": "Optional redirect mode. \"brand\" redirects to the brand's product page, \"price\" redirects to the lowest priced product, \"commission\" redirects to the product page with the highest commission rate"
+            "description": "If provided, links will redirect accordingly."
           }
         },
         "type": "object",
@@ -813,7 +799,7 @@
               { "type": "null" }
             ],
             "title": "Brand Ids",
-            "description": "List of brand IDs"
+            "description": "If provided, only products from these brands will be returned"
           },
           "gender": {
             "anyOf": [
@@ -822,12 +808,20 @@
             ],
             "title": "Gender"
           },
+          "condition": {
+            "anyOf": [
+              { "type": "string", "enum": ["new", "refurbished", "used"] },
+              { "type": "null" }
+            ],
+            "title": "Condition",
+            "description": "Filter by product condition. Incubating: condition data is currently incomplete; products without condition data will be included in all condition filter results."
+          },
           "price": {
             "anyOf": [
               { "$ref": "#/components/schemas/SearchFilterPrice" },
               { "type": "null" }
             ],
-            "description": "Price filter. Values are inclusive."
+            "description": "If provided, only products within this price range will be returned"
           },
           "availability": {
             "anyOf": [
@@ -838,7 +832,23 @@
               { "type": "null" }
             ],
             "title": "Availability",
-            "description": "List of availability statuses"
+            "description": "If provided, only products with these availability statuses will be returned"
+          },
+          "website_ids": {
+            "anyOf": [
+              { "items": { "type": "string" }, "type": "array" },
+              { "type": "null" }
+            ],
+            "title": "Website Ids",
+            "description": "If provided, only products from these websites will be returned"
+          },
+          "category_ids": {
+            "anyOf": [
+              { "items": { "type": "string" }, "type": "array" },
+              { "type": "null" }
+            ],
+            "title": "Category Ids",
+            "description": "If provided, only products from these categories will be returned"
           },
           "exclude_product_ids": {
             "anyOf": [
@@ -846,7 +856,7 @@
               { "type": "null" }
             ],
             "title": "Exclude Product Ids",
-            "description": "List of product IDs to exclude"
+            "description": "If provided, products with these IDs will be excluded from the results"
           }
         },
         "type": "object",
@@ -877,13 +887,13 @@
           },
           "filters": {
             "$ref": "#/components/schemas/SearchFilters",
-            "description": "Optional filters",
+            "description": "Optional filters. Search will only consider products that match all of the filters.",
             "default": {}
           },
           "config": {
             "$ref": "#/components/schemas/SearchConfig",
             "description": "Optional configuration",
-            "default": { "enrich_query": true, "semantic_search": true }
+            "default": { "enrich_query": true, "monetizable_only": false }
           },
           "context": {
             "anyOf": [{ "type": "string" }, { "type": "null" }],
@@ -903,6 +913,21 @@
         "type": "object",
         "required": ["product_id", "title", "image_url"],
         "title": "Variant"
+      },
+      "Website": {
+        "properties": {
+          "id": { "type": "string", "title": "Id" },
+          "url": { "type": "string", "title": "Url" },
+          "best_commission_rate": {
+            "type": "number",
+            "title": "Best Commission Rate",
+            "description": "The maximum commission rate for the website, as a percentage",
+            "default": 0.0
+          }
+        },
+        "type": "object",
+        "required": ["id", "url"],
+        "title": "Website"
       }
     },
     "securitySchemes": {
