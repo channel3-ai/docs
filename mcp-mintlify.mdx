@@ -1,0 +1,172 @@
+---
+title: "Mintlify-Hosted"
+description: "Connect to Channel3's MCP server via Mintlify"
+---
+
+## What is the Channel3 MCP?
+
+The Channel3 MCP gives your AI agents superpowers for product discovery. Your agent can search through tens of millions of real products in real-time, complete with current prices, rich images, detailed descriptions, and real-time availability.
+
+Channel3's MCP server is available at `https://docs.trychannel3.com/mcp` and includes:
+
+- **Documentation search** - Query Channel3 API documentation
+- **Product search** - Search across millions of products
+- **Product details** - Get comprehensive product information
+- **Brand lookup** - Find brands and their information
+- **Website lookup** - Find retailer information
+- **Product enrichment** - Get full details from product URLs
+
+## Quick Connect
+
+export const PreviewButton = ({children, href}) => {
+  return <a href={href} className="text-sm font-medium text-white dark:!text-zinc-950 bg-zinc-900 hover:bg-zinc-700 dark:bg-zinc-100 hover:dark:bg-zinc-300 rounded-full px-3.5 py-1.5 not-prose">
+        {children}
+      </a>;
+};
+
+<Tabs>
+  <Tab title="Cursor">
+    <PreviewButton href="cursor://anysphere.cursor-deeplink/mcp/install?name=Channel3&config=eyJ1cmwiOiJodHRwczovL2RvY3MudHJ5Y2hhbm5lbDMuY29tL21jcCJ9">Install in Cursor</PreviewButton>
+
+Or manually configure:
+
+<Steps>
+  <Step title="Open MCP settings">
+    1. Use <kbd>Command</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd> (<kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd> on Windows) to open the command palette.
+    2. Search for "Open MCP settings".
+    3. Select **Add custom MCP**. This will open the `mcp.json` file.
+  </Step>
+
+  <Step title="Configure the Channel3 MCP server">
+    In `mcp.json`, add:
+
+```json
+{
+  "mcpServers": {
+    "Channel3": {
+      "url": "https://docs.trychannel3.com/mcp"
+    }
+  }
+}
+```
+  </Step>
+
+  <Step title="Test the connection">
+    In Cursor's chat, ask "What tools do you have available?" Cursor should show the Channel3 MCP server as an available tool.
+  </Step>
+</Steps>
+
+See [Installing MCP servers](https://docs.cursor.com/en/context/mcp#installing-mcp-servers) in the Cursor documentation for more details.
+  </Tab>
+
+  <Tab title="VS Code">
+    <PreviewButton href="https://vscode.dev/redirect/mcp/install?name=Channel3&config=%7B%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fdocs.trychannel3.com%2Fmcp%22%7D">Install in VS Code</PreviewButton>
+
+Or manually configure:
+
+<Steps>
+  <Step title="Create MCP configuration">
+    Create a `.vscode/mcp.json` file in your project and add:
+
+```json
+{
+  "servers": {
+    "Channel3": {
+      "type": "http",
+      "url": "https://docs.trychannel3.com/mcp"
+    }
+  }
+}
+```
+  </Step>
+
+  <Step title="Test the connection">
+    Use GitHub Copilot Chat in VS Code to interact with Channel3 tools.
+  </Step>
+</Steps>
+
+See the [VS Code documentation](https://code.visualstudio.com/docs/copilot/chat/mcp-servers) for more details.
+  </Tab>
+
+  <Tab title="Claude">
+<Steps>
+  <Step title="Add the Channel3 MCP server to Claude">
+    1. Navigate to the [Connectors](https://claude.ai/settings/connectors) page in the Claude settings.
+    2. Select **Add custom connector**.
+    3. Add the Channel3 MCP server:
+       - Name: `Channel3`
+       - URL: `https://docs.trychannel3.com/mcp`
+    4. Select **Add**.
+  </Step>
+
+  <Step title="Access the MCP server in your chat">
+    1. When using Claude, select the attachments button (the plus icon).
+    2. Select the Channel3 MCP server.
+    3. Ask Claude to search for products.
+  </Step>
+</Steps>
+
+See the [Model Context Protocol documentation](https://modelcontextprotocol.io/docs/tutorials/use-remote-mcp-server#connecting-to-a-remote-mcp-server) for more details.
+  </Tab>
+
+  <Tab title="Claude Code">
+To use the Channel3 MCP server with Claude Code, run the following command:
+
+```bash
+claude mcp add --transport http Channel3 https://docs.trychannel3.com/mcp
+```
+
+Test the connection by running:
+
+```bash
+claude mcp list
+```
+
+See the [Claude Code documentation](https://docs.anthropic.com/en/docs/claude-code/mcp#installing-mcp-servers) for more details.
+  </Tab>
+</Tabs>
+
+## Authentication
+
+When AI tools call Channel3 API endpoints that require authentication, they will prompt you to provide your API key at that moment. The API key should be provided as the `x-api-key` header.
+
+<Note>
+  Get your API key from the [Channel3 Dashboard](https://trychannel3.com/dashboard).
+</Note>
+
+Authentication is handled directly by your AI tool and not stored or processed by Mintlify.
+
+## Available Tools
+
+The Channel3 MCP server exposes the following tools:
+
+| Tool | Description |
+| :--- | :---------- |
+| **search** | Search Channel3 documentation |
+| **search_products** | Search for products with filters for brand, price, gender, availability, and categories |
+| **get_product_details** | Get comprehensive details about a specific product by ID |
+| **find_brand** | Find brand information by name, including commission rates |
+| **find_website** | Find retailer information by URL or domain |
+| **enrich_product_url** | Get full product details from a product URL |
+
+## Example Usage
+
+After connecting the MCP server to your AI tool:
+
+```
+You: "Find me black running shoes under $100"
+AI: [Uses search_products tool to find relevant products]
+
+You: "Tell me more about the first product"
+AI: [Uses get_product_details tool to get full information]
+
+You: "What's Nike's commission rate?"
+AI: [Uses find_brand tool to look up Nike's information]
+```
+
+## Next Steps
+
+- View the [API Reference](/api-reference/endpoint/search) for detailed endpoint documentation
+- Try our [Shopping Assistant Demo](/demos/shopping-assistant)
+- Read the [Quickstart Guide](/quickstart) to get started with the API
+

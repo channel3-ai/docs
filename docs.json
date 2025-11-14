@@ -14,7 +14,7 @@
   ],
 
   "contextual": {
-    "options": ["copy", "view", "chatgpt", "claude", "cursor"]
+    "options": ["copy", "view", "chatgpt", "claude", "cursor", "mcp", "vscode"]
   },
   "navigation": {
     "groups": [
@@ -51,7 +51,7 @@
       },
       {
         "group": "MCP",
-        "pages": ["mcp-overview"]
+        "pages": ["mcp-overview", "mcp-mintlify"]
       },
       {
         "group": "Demos",

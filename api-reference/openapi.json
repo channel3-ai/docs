@@ -1,5 +1,10 @@
 {
   "openapi": "3.1.0",
+  "x-mint": {
+    "mcp": {
+      "enabled": true
+    }
+  },
   "info": {
     "title": "FastAPI",
     "version": "0.1.0"
@@ -13,6 +18,13 @@
   "paths": {
     "/v0/search": {
       "post": {
+        "x-mint": {
+          "mcp": {
+            "enabled": true,
+            "name": "search_products",
+            "description": "Search for products across millions of items. Supports text queries, image URLs, and filters for brand, price, gender, availability, and categories. Returns product details including title, price, images, and availability."
+          }
+        },
         "tags": [
           "channel3-api"
         ],
@@ -139,6 +151,13 @@
     },
     "/v0/products/{product_id}": {
       "get": {
+        "x-mint": {
+          "mcp": {
+            "enabled": true,
+            "name": "get_product_details",
+            "description": "Get comprehensive details about a specific product by its ID. Returns full product information including title, description, brand, images, price, categories, availability, materials, and key features."
+          }
+        },
         "tags": [
           "channel3-api"
         ],
@@ -262,6 +281,13 @@
     },
     "/v0/websites": {
       "get": {
+        "x-mint": {
+          "mcp": {
+            "enabled": true,
+            "name": "find_website",
+            "description": "Find a website by URL or domain name. Returns website information including ID, URL, and commission rates. Useful for filtering products by specific retailers."
+          }
+        },
         "tags": [
           "channel3-api"
         ],
@@ -393,6 +419,13 @@
     },
     "/v0/brands": {
       "get": {
+        "x-mint": {
+          "mcp": {
+            "enabled": true,
+            "name": "find_brand",
+            "description": "Find a brand by name. Returns brand information including ID, name, logo, description, and commission rates. Use the brand ID to filter product searches."
+          }
+        },
         "tags": [
           "channel3-api"
         ],
@@ -516,11 +549,18 @@
     },
     "/v0/enrich": {
       "post": {
+        "x-mint": {
+          "mcp": {
+            "enabled": true,
+            "name": "enrich_product_url",
+            "description": "Get full product information from Channel3's database by providing a product URL. Returns comprehensive product details including title, price, images, brand, categories, and availability."
+          }
+        },
         "tags": [
           "channel3-api"
         ],
         "summary": "Enrich Product Url",
-        "description": "Search by product URL, get back full product information from Channel3’s product database.",
+        "description": "Search by product URL, get back full product information from Channel3's product database.",
         "operationId": "enrich_product_url_v0_enrich_post",
         "requestBody": {
           "content": {
@@ -638,6 +678,11 @@
     },
     "/": {
       "get": {
+        "x-mint": {
+          "mcp": {
+            "enabled": false
+          }
+        },
         "summary": "Root",
         "operationId": "root__get",
         "responses": {
