@@ -1,0 +1,62 @@
+---
+title: "AI Shopping Assistant"
+description: "A customizable AI shopping assistant built with Channel3, Next.js, and the Vercel AI SDK that you can monetize."
+---
+
+## Quickstart
+Clone the repo, customize your agent, and generate commission from products your agent sells! 🎉
+
+- **Try out a live demo**: [AI Shopping Assistant Demo](https://shopping-assistant-omega.vercel.app/)
+- **Clone the GitHub repo**: [channel3-ai/shopping-assistant](https://github.com/channel3-ai/shopping-assistant)
+
+## Details
+
+The Customizable Shopping Assistant is a simple AI chatbot that uses Channel3 for real-time product search.
+It is built with Next.js 16 and the Vercel AI SDK, and displays search results in an interactive product carousel above the chat.
+
+You can ask about products in natural language (for example, "show me linen shirts under $100" or "find running shoes similar to this picture"),
+and the agent will call Channel3 under the hood to fetch relevant products.
+
+You can edit `app-config.ts` to customize the agent's personality, theme, and search behavior. Some examples of agents you can build with this repo:
+- A Santa Claus agent that helps users find the perfect gift
+- A fashion stylist that helps users pick out clothes for a specific occasion
+- An expert interior designer that helps users find the perfect furniture for their home
+
+![Chat interface]( /public/demos/chat-interface.png )
+
+![Product carousel]( /public/demos/product-carousel.png )
+
+![Product details]( /public/demos/product-details.png )
+
+## Key capabilities
+
+- **Natural language product search**: The agent uses Channel3 to search across a large product catalog from free-form queries.
+- **Rich product UI**: Search results are rendered in a carousel with images, pricing, and product details.
+- **Image-based search**: Users can upload an image to find visually similar products.
+- **Built-in monetization**: Channel3 handles affiliate tracking and revenue sharing when users click through and purchase.
+
+## Customizing the agent
+
+You can quickly adapt this demo to your use case without changing the core architecture:
+
+- **Update the app configuration** in `app/app-config.ts` in the demo repo:
+  - Change the **model** and provider via the `model` field.
+  - Customize **metadata and UI copy** (title, welcome message, input placeholder).
+  - Adjust the **agent instructions** to match your brand voice and shopping experience.
+- **Tune Channel3 search behavior** via the `search.filters` section in `app/app-config.ts`:
+  - Filter by brands, categories, gender, price range, availability, condition, and more.
+  - Start broad, then narrow filters as you refine your experience.
+- **Extend the agent tools** (for example, to add new actions alongside Channel3 search) by editing the files in the demo repo’s `agent` folder.
+
+## When to use this
+
+This is a great starting point if you want to:
+
+- Build an **AI shopping agent** that can chat with users and recommend products
+- See a **full end-to-end integration** between Channel3, an LLM, and a modern web UI
+- Learn patterns for using Channel3 search as a tool within an AI agent workflow
+
+For installation, running locally, and deployment guidance, follow the instructions in the GitHub `README` linked above.
+
+https://github.com/channel3-ai/shopping-assistant
+
