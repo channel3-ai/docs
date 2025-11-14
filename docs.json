@@ -55,7 +55,7 @@
       },
       {
         "group": "Demos",
-        "pages": ["demos/shopping-assistant"]
+        "pages": ["demos/shopping-assistant", "demos/agentic-storefront"]
       },
       {
         "group": "FAQ",
