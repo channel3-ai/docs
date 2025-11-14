@@ -64,8 +64,8 @@
     ]
   },
   "logo": {
-    "light": "/logo/small-light.svg",
-    "dark": "/logo/small-dark.svg"
+    "light": "/logo/channel3-logo-wide-light.svg",
+    "dark": "/logo/channel3-logo-wide-dark.svg"
   },
   "navbar": {
     "links": [
