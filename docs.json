@@ -41,7 +41,8 @@
           {
             "group": "Websites",
             "pages": ["api-reference/endpoint/websites"]
-          }
+          },
+          "pricing"
         ]
       },
       {
@@ -51,6 +52,14 @@
       {
         "group": "MCP",
         "pages": ["mcp-overview"]
+      },
+      {
+        "group": "Demos",
+        "pages": ["demos/agent-demo"]
+      },
+      {
+        "group": "FAQ",
+        "pages": ["faq"]
       }
     ]
   },
