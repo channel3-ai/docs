@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "x-mint": {
     "mcp": {
-      "enabled": false
+      "enabled": true
     }
   },
   "info": {
@@ -18,13 +18,6 @@
   "paths": {
     "/v0/search": {
       "post": {
-        "x-mint": {
-          "mcp": {
-            "enabled": true,
-            "name": "search_products",
-            "description": "Search for products across millions of items. Supports text queries, image URLs, and filters for brand, price, gender, availability, and categories. Returns product details including title, price, images, and availability."
-          }
-        },
         "tags": [
           "channel3-api"
         ],
@@ -151,13 +144,6 @@
     },
     "/v0/products/{product_id}": {
       "get": {
-        "x-mint": {
-          "mcp": {
-            "enabled": true,
-            "name": "get_product_details",
-            "description": "Get comprehensive details about a specific product by its ID. Returns full product information including title, description, brand, images, price, categories, availability, materials, and key features."
-          }
-        },
         "tags": [
           "channel3-api"
         ],
@@ -281,13 +267,6 @@
     },
     "/v0/websites": {
       "get": {
-        "x-mint": {
-          "mcp": {
-            "enabled": true,
-            "name": "find_website",
-            "description": "Find a website by URL or domain name. Returns website information including ID, URL, and commission rates. Useful for filtering products by specific retailers."
-          }
-        },
         "tags": [
           "channel3-api"
         ],
@@ -419,13 +398,6 @@
     },
     "/v0/brands": {
       "get": {
-        "x-mint": {
-          "mcp": {
-            "enabled": true,
-            "name": "find_brand",
-            "description": "Find a brand by name. Returns brand information including ID, name, logo, description, and commission rates. Use the brand ID to filter product searches."
-          }
-        },
         "tags": [
           "channel3-api"
         ],
@@ -549,18 +521,11 @@
     },
     "/v0/enrich": {
       "post": {
-        "x-mint": {
-          "mcp": {
-            "enabled": true,
-            "name": "enrich_product_url",
-            "description": "Get full product information from Channel3's database by providing a product URL. Returns comprehensive product details including title, price, images, brand, categories, and availability."
-          }
-        },
         "tags": [
           "channel3-api"
         ],
         "summary": "Enrich Product Url",
-        "description": "Search by product URL, get back full product information from Channel3's product database.",
+        "description": "Search by product URL, get back full product information from Channel3’s product database.",
         "operationId": "enrich_product_url_v0_enrich_post",
         "requestBody": {
           "content": {
@@ -578,7 +543,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProductDetail"
+                  "$ref": "#/components/schemas/EnrichedProduct"
                 }
               }
             }
@@ -678,11 +643,6 @@
     },
     "/": {
       "get": {
-        "x-mint": {
-          "mcp": {
-            "enabled": false
-          }
-        },
         "summary": "Root",
         "operationId": "root__get",
         "responses": {
@@ -690,7 +650,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+
+                }
               }
             }
           }
@@ -750,7 +712,7 @@
             "type": "number",
             "title": "Best Commission Rate",
             "description": "The maximum commission rate for the brand, as a percentage",
-            "default": 0.0
+            "default": 0
           }
         },
         "type": "object",
@@ -773,6 +735,125 @@
           "url"
         ],
         "title": "EnrichRequest"
+      },
+      "EnrichedProduct": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "url": {
+            "type": "string",
+            "title": "Url"
+          },
+          "brand_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Brand Id"
+          },
+          "brand_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Brand Name"
+          },
+          "image_urls": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Image Urls"
+          },
+          "price": {
+            "$ref": "#/components/schemas/Price"
+          },
+          "availability": {
+            "$ref": "#/components/schemas/AvailabilityStatus"
+          },
+          "gender": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "male",
+                  "female",
+                  "unisex"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Gender"
+          },
+          "materials": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Materials"
+          },
+          "key_features": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Key Features"
+          },
+          "variants": {
+            "items": {
+              "$ref": "#/components/schemas/Variant"
+            },
+            "type": "array",
+            "title": "Variants",
+            "default": []
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "url",
+          "price",
+          "availability"
+        ],
+        "title": "EnrichedProduct"
       },
       "ErrorResponse": {
         "properties": {
@@ -1043,6 +1124,12 @@
             "description": "If True, search will use AI to enrich the query, for example pulling the gender, brand, and price range from the query.",
             "default": true
           },
+          "monetizable_only": {
+            "type": "boolean",
+            "title": "Monetizable Only",
+            "description": "If True, search will only consider products that offer commission.",
+            "default": false
+          },
           "redirect_mode": {
             "anyOf": [
               {
@@ -1269,13 +1356,16 @@
           "filters": {
             "$ref": "#/components/schemas/SearchFilters",
             "description": "Optional filters. Search will only consider products that match all of the filters.",
-            "default": {}
+            "default": {
+
+            }
           },
           "config": {
             "$ref": "#/components/schemas/SearchConfig",
             "description": "Optional configuration",
             "default": {
-              "enrich_query": true
+              "enrich_query": true,
+              "monetizable_only": false
             }
           },
           "context": {
@@ -1331,7 +1421,7 @@
             "type": "number",
             "title": "Best Commission Rate",
             "description": "The maximum commission rate for the website, as a percentage",
-            "default": 0.0
+            "default": 0
           }
         },
         "type": "object",
