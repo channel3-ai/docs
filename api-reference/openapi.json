@@ -1,10 +1,5 @@
 {
   "openapi": "3.1.0",
-  "x-mint": {
-    "mcp": {
-      "enabled": true
-    }
-  },
   "info": {
     "title": "FastAPI",
     "version": "0.1.0"
@@ -543,7 +538,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/EnrichedProduct"
+                  "$ref": "#/components/schemas/ProductDetail"
                 }
               }
             }
@@ -650,9 +645,7 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {
-
-                }
+                "schema": {}
               }
             }
           }
@@ -712,7 +705,7 @@
             "type": "number",
             "title": "Best Commission Rate",
             "description": "The maximum commission rate for the brand, as a percentage",
-            "default": 0
+            "default": 0.0
           }
         },
         "type": "object",
@@ -735,125 +728,6 @@
           "url"
         ],
         "title": "EnrichRequest"
-      },
-      "EnrichedProduct": {
-        "properties": {
-          "id": {
-            "type": "string",
-            "title": "Id"
-          },
-          "title": {
-            "type": "string",
-            "title": "Title"
-          },
-          "url": {
-            "type": "string",
-            "title": "Url"
-          },
-          "brand_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Brand Id"
-          },
-          "brand_name": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Brand Name"
-          },
-          "image_urls": {
-            "anyOf": [
-              {
-                "items": {
-                  "type": "string"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Image Urls"
-          },
-          "price": {
-            "$ref": "#/components/schemas/Price"
-          },
-          "availability": {
-            "$ref": "#/components/schemas/AvailabilityStatus"
-          },
-          "gender": {
-            "anyOf": [
-              {
-                "type": "string",
-                "enum": [
-                  "male",
-                  "female",
-                  "unisex"
-                ]
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Gender"
-          },
-          "materials": {
-            "anyOf": [
-              {
-                "items": {
-                  "type": "string"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Materials"
-          },
-          "key_features": {
-            "anyOf": [
-              {
-                "items": {
-                  "type": "string"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Key Features"
-          },
-          "variants": {
-            "items": {
-              "$ref": "#/components/schemas/Variant"
-            },
-            "type": "array",
-            "title": "Variants",
-            "default": []
-          }
-        },
-        "type": "object",
-        "required": [
-          "id",
-          "title",
-          "url",
-          "price",
-          "availability"
-        ],
-        "title": "EnrichedProduct"
       },
       "ErrorResponse": {
         "properties": {
@@ -1124,12 +998,6 @@
             "description": "If True, search will use AI to enrich the query, for example pulling the gender, brand, and price range from the query.",
             "default": true
           },
-          "monetizable_only": {
-            "type": "boolean",
-            "title": "Monetizable Only",
-            "description": "If True, search will only consider products that offer commission.",
-            "default": false
-          },
           "redirect_mode": {
             "anyOf": [
               {
@@ -1356,16 +1224,13 @@
           "filters": {
             "$ref": "#/components/schemas/SearchFilters",
             "description": "Optional filters. Search will only consider products that match all of the filters.",
-            "default": {
-
-            }
+            "default": {}
           },
           "config": {
             "$ref": "#/components/schemas/SearchConfig",
             "description": "Optional configuration",
             "default": {
-              "enrich_query": true,
-              "monetizable_only": false
+              "enrich_query": true
             }
           },
           "context": {
@@ -1421,7 +1286,7 @@
             "type": "number",
             "title": "Best Commission Rate",
             "description": "The maximum commission rate for the website, as a percentage",
-            "default": 0
+            "default": 0.0
           }
         },
         "type": "object",
