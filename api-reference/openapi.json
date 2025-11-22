@@ -139,6 +139,18 @@
           {
             "APIKeyHeader": []
           }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "python",
+            "label": "Python SDK",
+            "source": "from channel3_sdk import Channel3\n\nclient = Channel3(api_key=\"YOUR_API_KEY\")\n\nresponse = client.search.perform(\n    query=\"shoes\",\n    limit=10\n)\nprint(response)"
+          },
+          {
+            "lang": "typescript",
+            "label": "TypeScript SDK",
+            "source": "import Channel3 from '@channel3/sdk';\n\nconst client = new Channel3({ apiKey: 'YOUR_API_KEY' });\n\nconst response = await client.search.perform({\n  query: 'shoes',\n  limit: 10\n});\nconsole.log(response);"
+          }
         ]
       }
     },
@@ -262,7 +274,19 @@
               }
             }
           }
-        }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "python",
+            "label": "Python SDK",
+            "source": "from channel3_sdk import Channel3\n\nclient = Channel3(api_key=\"YOUR_API_KEY\")\n\nproduct = client.products.retrieve(product_id=\"PRODUCT_ID\")\nprint(product)"
+          },
+          {
+            "lang": "typescript",
+            "label": "TypeScript SDK",
+            "source": "import Channel3 from '@channel3/sdk';\n\nconst client = new Channel3({ apiKey: 'YOUR_API_KEY' });\n\nconst product = await client.products.retrieve('PRODUCT_ID');\nconsole.log(product);"
+          }
+        ]
       }
     },
     "/v0/websites": {
@@ -393,7 +417,19 @@
               }
             }
           }
-        }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "python",
+            "label": "Python SDK",
+            "source": "from channel3_sdk import Channel3\n\nclient = Channel3(api_key=\"YOUR_API_KEY\")\n\nwebsite = client.websites.find(query=\"amazon.com\")\nprint(website)"
+          },
+          {
+            "lang": "typescript",
+            "label": "TypeScript SDK",
+            "source": "import Channel3 from '@channel3/sdk';\n\nconst client = new Channel3({ apiKey: 'YOUR_API_KEY' });\n\nconst website = await client.websites.find({ query: 'amazon.com' });\nconsole.log(website);"
+          }
+        ]
       }
     },
     "/v0/brands": {
@@ -516,7 +552,19 @@
               }
             }
           }
-        }
+        },
+        "x-codeSamples": [
+          {
+            "lang": "python",
+            "label": "Python SDK",
+            "source": "from channel3_sdk import Channel3\n\nclient = Channel3(api_key=\"YOUR_API_KEY\")\n\nbrand = client.brands.find(query=\"nike\")\nprint(brand)"
+          },
+          {
+            "lang": "typescript",
+            "label": "TypeScript SDK",
+            "source": "import Channel3 from '@channel3/sdk';\n\nconst client = new Channel3({ apiKey: 'YOUR_API_KEY' });\n\nconst brand = await client.brands.find({ query: 'nike' });\nconsole.log(brand);"
+          }
+        ]
       }
     },
     "/v0/enrich": {
@@ -525,7 +573,7 @@
           "channel3-api"
         ],
         "summary": "Enrich Product Url",
-        "description": "Search by product URL, get back full product information from Channel3’s product database.",
+        "description": "Search by product URL, get back full product information from Channel3\u2019s product database.",
         "operationId": "enrich_product_url_v0_enrich_post",
         "requestBody": {
           "content": {
@@ -638,6 +686,18 @@
           {
             "APIKeyHeader": []
           }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "python",
+            "label": "Python SDK",
+            "source": "from channel3_sdk import Channel3\n\nclient = Channel3(api_key=\"YOUR_API_KEY\")\n\nresponse = client.enrich.perform(\n    url=\"https://brand.com/products/linen-shirt\"\n)\nprint(response)"
+          },
+          {
+            "lang": "typescript",
+            "label": "TypeScript SDK",
+            "source": "import Channel3 from '@channel3/sdk';\n\nconst client = new Channel3({ apiKey: 'YOUR_API_KEY' });\n\nconst response = await client.enrich.perform({\n  url: 'https://brand.com/products/linen-shirt'\n});\nconsole.log(response);"
+          }
         ]
       }
     },
@@ -650,9 +710,7 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {
-
-                }
+                "schema": {}
               }
             }
           }
@@ -1356,9 +1414,7 @@
           "filters": {
             "$ref": "#/components/schemas/SearchFilters",
             "description": "Optional filters. Search will only consider products that match all of the filters.",
-            "default": {
-
-            }
+            "default": {}
           },
           "config": {
             "$ref": "#/components/schemas/SearchConfig",

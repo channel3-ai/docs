@@ -2,6 +2,12 @@
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
   "name": "Channel3",
+  "openapi": "https://app.stainless.com/api/spec/documented/public-sdk/openapi.documented.yml",
+  "api": {
+    "examples": {
+      "languages": ["python", "typescript", "curl"]
+    }
+  },
   "colors": {
     "primary": "#5D3FD3",
     "light": "#5D3FD3",
@@ -34,7 +40,7 @@
             ]
           },
           {
-            "group": "Brand",
+            "group": "Brands",
             "pages": ["api-reference/endpoint/brands"]
           },
           "categories",
