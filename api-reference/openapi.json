@@ -1,10 +1,5 @@
 {
   "openapi": "3.1.0",
-  "x-mint": {
-    "mcp": {
-      "enabled": true
-    }
-  },
   "info": {
     "title": "FastAPI",
     "version": "0.1.0"
@@ -41,7 +36,7 @@
               "application/json": {
                 "schema": {
                   "items": {
-                    "$ref": "#/components/schemas/Product"
+                    "$ref": "#/components/schemas/Product-Output"
                   },
                   "type": "array",
                   "title": "Response Search V0 Search Post"
@@ -138,18 +133,6 @@
         "security": [
           {
             "APIKeyHeader": []
-          }
-        ],
-        "x-codeSamples": [
-          {
-            "lang": "python",
-            "label": "Python SDK",
-            "source": "from channel3_sdk import Channel3\n\nclient = Channel3(api_key=\"YOUR_API_KEY\")\n\nresponse = client.search.perform(\n    query=\"shoes\",\n    limit=10\n)\nprint(response)"
-          },
-          {
-            "lang": "typescript",
-            "label": "TypeScript SDK",
-            "source": "import Channel3 from '@channel3/sdk';\n\nconst client = new Channel3({ apiKey: 'YOUR_API_KEY' });\n\nconst response = await client.search.perform({\n  query: 'shoes',\n  limit: 10\n});\nconsole.log(response);"
           }
         ]
       }
@@ -274,19 +257,7 @@
               }
             }
           }
-        },
-        "x-codeSamples": [
-          {
-            "lang": "python",
-            "label": "Python SDK",
-            "source": "from channel3_sdk import Channel3\n\nclient = Channel3(api_key=\"YOUR_API_KEY\")\n\nproduct = client.products.retrieve(product_id=\"PRODUCT_ID\")\nprint(product)"
-          },
-          {
-            "lang": "typescript",
-            "label": "TypeScript SDK",
-            "source": "import Channel3 from '@channel3/sdk';\n\nconst client = new Channel3({ apiKey: 'YOUR_API_KEY' });\n\nconst product = await client.products.retrieve('PRODUCT_ID');\nconsole.log(product);"
-          }
-        ]
+        }
       }
     },
     "/v0/websites": {
@@ -417,19 +388,7 @@
               }
             }
           }
-        },
-        "x-codeSamples": [
-          {
-            "lang": "python",
-            "label": "Python SDK",
-            "source": "from channel3_sdk import Channel3\n\nclient = Channel3(api_key=\"YOUR_API_KEY\")\n\nwebsite = client.websites.find(query=\"amazon.com\")\nprint(website)"
-          },
-          {
-            "lang": "typescript",
-            "label": "TypeScript SDK",
-            "source": "import Channel3 from '@channel3/sdk';\n\nconst client = new Channel3({ apiKey: 'YOUR_API_KEY' });\n\nconst website = await client.websites.find({ query: 'amazon.com' });\nconsole.log(website);"
-          }
-        ]
+        }
       }
     },
     "/v0/brands": {
@@ -552,19 +511,7 @@
               }
             }
           }
-        },
-        "x-codeSamples": [
-          {
-            "lang": "python",
-            "label": "Python SDK",
-            "source": "from channel3_sdk import Channel3\n\nclient = Channel3(api_key=\"YOUR_API_KEY\")\n\nbrand = client.brands.find(query=\"nike\")\nprint(brand)"
-          },
-          {
-            "lang": "typescript",
-            "label": "TypeScript SDK",
-            "source": "import Channel3 from '@channel3/sdk';\n\nconst client = new Channel3({ apiKey: 'YOUR_API_KEY' });\n\nconst brand = await client.brands.find({ query: 'nike' });\nconsole.log(brand);"
-          }
-        ]
+        }
       }
     },
     "/v0/enrich": {
@@ -573,7 +520,7 @@
           "channel3-api"
         ],
         "summary": "Enrich Product Url",
-        "description": "Search by product URL, get back full product information from Channel3\u2019s product database.",
+        "description": "Search by product URL, get back full product information from Channel3’s product database.",
         "operationId": "enrich_product_url_v0_enrich_post",
         "requestBody": {
           "content": {
@@ -591,7 +538,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/EnrichedProduct"
+                  "$ref": "#/components/schemas/ProductDetail"
                 }
               }
             }
@@ -686,18 +633,6 @@
           {
             "APIKeyHeader": []
           }
-        ],
-        "x-codeSamples": [
-          {
-            "lang": "python",
-            "label": "Python SDK",
-            "source": "from channel3_sdk import Channel3\n\nclient = Channel3(api_key=\"YOUR_API_KEY\")\n\nresponse = client.enrich.perform(\n    url=\"https://brand.com/products/linen-shirt\"\n)\nprint(response)"
-          },
-          {
-            "lang": "typescript",
-            "label": "TypeScript SDK",
-            "source": "import Channel3 from '@channel3/sdk';\n\nconst client = new Channel3({ apiKey: 'YOUR_API_KEY' });\n\nconst response = await client.enrich.perform({\n  url: 'https://brand.com/products/linen-shirt'\n});\nconsole.log(response);"
-          }
         ]
       }
     },
@@ -720,6 +655,36 @@
   },
   "components": {
     "schemas": {
+      "ApiPhotoQuality": {
+        "type": "string",
+        "enum": [
+          "professional",
+          "ugc",
+          "poor"
+        ],
+        "title": "ApiPhotoQuality",
+        "description": "Photo quality classification for API responses.\nNote: This enum is decoupled from internal ImageIntelligence types as they may diverge."
+      },
+      "ApiProductImageType": {
+        "type": "string",
+        "enum": [
+          "hero",
+          "lifestyle",
+          "on_model",
+          "detail",
+          "scale_reference",
+          "angle_view",
+          "flat_lay",
+          "in_use",
+          "packaging",
+          "size_chart",
+          "color_swatch",
+          "product_information",
+          "merchant_information"
+        ],
+        "title": "ApiProductImageType",
+        "description": "Product image type classification for API responses.\nNote: This enum is decoupled from internal ImageIntelligence types as they may diverge."
+      },
       "AvailabilityStatus": {
         "type": "string",
         "enum": [
@@ -770,7 +735,7 @@
             "type": "number",
             "title": "Best Commission Rate",
             "description": "The maximum commission rate for the brand, as a percentage",
-            "default": 0
+            "default": 0.0
           }
         },
         "type": "object",
@@ -794,19 +759,74 @@
         ],
         "title": "EnrichRequest"
       },
-      "EnrichedProduct": {
+      "ErrorResponse": {
+        "properties": {
+          "detail": {
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "required": [
+          "detail"
+        ],
+        "title": "ErrorResponse"
+      },
+      "Price": {
+        "properties": {
+          "price": {
+            "type": "number",
+            "title": "Price",
+            "description": "The current price of the product, including any discounts."
+          },
+          "compare_at_price": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Compare At Price",
+            "description": "The original price of the product before any discounts."
+          },
+          "currency": {
+            "type": "string",
+            "title": "Currency",
+            "description": "The currency code of the product, like USD, EUR, GBP, etc."
+          }
+        },
+        "type": "object",
+        "required": [
+          "price",
+          "currency"
+        ],
+        "title": "Price"
+      },
+      "Product-Input": {
         "properties": {
           "id": {
             "type": "string",
             "title": "Id"
           },
+          "url": {
+            "type": "string",
+            "title": "Url"
+          },
           "title": {
             "type": "string",
             "title": "Title"
           },
-          "url": {
-            "type": "string",
-            "title": "Url"
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
           },
           "brand_id": {
             "anyOf": [
@@ -831,21 +851,33 @@
             "title": "Brand Name"
           },
           "image_urls": {
-            "anyOf": [
-              {
-                "items": {
-                  "type": "string"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Image Urls"
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Image Urls",
+            "description": "List of image URLs (deprecated, use images field)",
+            "default": [],
+            "deprecated": true
+          },
+          "images": {
+            "items": {
+              "$ref": "#/components/schemas/ProductImage"
+            },
+            "type": "array",
+            "title": "Images",
+            "default": []
           },
           "price": {
             "$ref": "#/components/schemas/Price"
+          },
+          "categories": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Categories",
+            "default": []
           },
           "availability": {
             "$ref": "#/components/schemas/AvailabilityStatus"
@@ -901,71 +933,36 @@
             "type": "array",
             "title": "Variants",
             "default": []
+          },
+          "score": {
+            "type": "integer",
+            "title": "Score"
+          },
+          "image_url": {
+            "type": "string",
+            "title": "Image Url",
+            "description": "Main product image (deprecated, use images field)",
+            "deprecated": true
           }
         },
         "type": "object",
         "required": [
           "id",
-          "title",
           "url",
+          "title",
           "price",
-          "availability"
+          "availability",
+          "score",
+          "image_url"
         ],
-        "title": "EnrichedProduct"
+        "title": "Product",
+        "description": "A search result that includes product details and a relevance score."
       },
-      "ErrorResponse": {
-        "properties": {
-          "detail": {
-            "title": "Detail"
-          }
-        },
-        "type": "object",
-        "required": [
-          "detail"
-        ],
-        "title": "ErrorResponse"
-      },
-      "Price": {
-        "properties": {
-          "price": {
-            "type": "number",
-            "title": "Price",
-            "description": "The current price of the product, including any discounts."
-          },
-          "compare_at_price": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Compare At Price",
-            "description": "The original price of the product before any discounts."
-          },
-          "currency": {
-            "type": "string",
-            "title": "Currency",
-            "description": "The currency code of the product, like USD, EUR, GBP, etc."
-          }
-        },
-        "type": "object",
-        "required": [
-          "price",
-          "currency"
-        ],
-        "title": "Price"
-      },
-      "Product": {
+      "Product-Output": {
         "properties": {
           "id": {
             "type": "string",
             "title": "Id"
-          },
-          "score": {
-            "type": "integer",
-            "title": "Score"
           },
           "url": {
             "type": "string",
@@ -986,13 +983,45 @@
             ],
             "title": "Description"
           },
+          "brand_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Brand Id"
+          },
           "brand_name": {
-            "type": "string",
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Brand Name"
           },
-          "image_url": {
-            "type": "string",
-            "title": "Image Url"
+          "image_urls": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Image Urls",
+            "description": "List of image URLs (deprecated, use images field)",
+            "default": [],
+            "deprecated": true
+          },
+          "images": {
+            "items": {
+              "$ref": "#/components/schemas/ProductImage"
+            },
+            "type": "array",
+            "title": "Images",
+            "default": []
           },
           "price": {
             "$ref": "#/components/schemas/Price"
@@ -1008,6 +1037,50 @@
           "availability": {
             "$ref": "#/components/schemas/AvailabilityStatus"
           },
+          "gender": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "male",
+                  "female",
+                  "unisex"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Gender"
+          },
+          "materials": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Materials"
+          },
+          "key_features": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Key Features"
+          },
           "variants": {
             "items": {
               "$ref": "#/components/schemas/Variant"
@@ -1015,21 +1088,30 @@
             "type": "array",
             "title": "Variants",
             "default": []
+          },
+          "score": {
+            "type": "integer",
+            "title": "Score"
+          },
+          "image_url": {
+            "type": "string",
+            "title": "Image Url",
+            "description": "Main product image (deprecated, use images field)",
+            "deprecated": true
           }
         },
         "type": "object",
         "required": [
           "id",
-          "score",
           "url",
           "title",
-          "brand_name",
-          "image_url",
           "price",
-          "availability"
+          "availability",
+          "score",
+          "image_url"
         ],
         "title": "Product",
-        "description": "A product"
+        "description": "A search result that includes product details and a relevance score."
       },
       "ProductDetail": {
         "properties": {
@@ -1084,6 +1166,16 @@
             },
             "type": "array",
             "title": "Image Urls",
+            "description": "List of image URLs (deprecated, use images field)",
+            "default": [],
+            "deprecated": true
+          },
+          "images": {
+            "items": {
+              "$ref": "#/components/schemas/ProductImage"
+            },
+            "type": "array",
+            "title": "Images",
             "default": []
           },
           "price": {
@@ -1164,6 +1256,56 @@
         "title": "ProductDetail",
         "description": "A product with detailed information"
       },
+      "ProductImage": {
+        "properties": {
+          "url": {
+            "type": "string",
+            "title": "Url"
+          },
+          "is_main_image": {
+            "type": "boolean",
+            "title": "Is Main Image",
+            "default": false
+          },
+          "shot_type": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ApiProductImageType"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "photo_quality": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ApiPhotoQuality"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "alt_text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Alt Text"
+          }
+        },
+        "type": "object",
+        "required": [
+          "url"
+        ],
+        "title": "ProductImage",
+        "description": "Product image with metadata"
+      },
       "RedirectMode": {
         "type": "string",
         "enum": [
@@ -1181,12 +1323,6 @@
             "title": "Enrich Query",
             "description": "If True, search will use AI to enrich the query, for example pulling the gender, brand, and price range from the query.",
             "default": true
-          },
-          "monetizable_only": {
-            "type": "boolean",
-            "title": "Monetizable Only",
-            "description": "If True, search will only consider products that offer commission.",
-            "default": false
           },
           "redirect_mode": {
             "anyOf": [
@@ -1420,8 +1556,7 @@
             "$ref": "#/components/schemas/SearchConfig",
             "description": "Optional configuration",
             "default": {
-              "enrich_query": true,
-              "monetizable_only": false
+              "enrich_query": true
             }
           },
           "context": {
@@ -1477,7 +1612,7 @@
             "type": "number",
             "title": "Best Commission Rate",
             "description": "The maximum commission rate for the website, as a percentage",
-            "default": 0
+            "default": 0.0
           }
         },
         "type": "object",
