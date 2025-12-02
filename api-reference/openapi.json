@@ -41,7 +41,7 @@
               "application/json": {
                 "schema": {
                   "items": {
-                    "$ref": "#/components/schemas/Product"
+                    "$ref": "#/components/schemas/Product-Output"
                   },
                   "type": "array",
                   "title": "Response Search V0 Search Post"
@@ -60,13 +60,13 @@
                   "missing_key": {
                     "summary": "Missing API Key",
                     "value": {
-                      "detail": "Unauthorized. Missing authentication key. Make sure to attach an x-api-key with your request. Need help? Reach out to founders@trychannel3.com."
+                      "detail": "Unauthorized. Missing authentication key. Make sure to attach an x-api-key with your request. Need help? Reach out to support@trychannel3.com."
                     }
                   },
                   "invalid_key": {
                     "summary": "Invalid API Key",
                     "value": {
-                      "detail": "API key was provided but is invalid. Need help? Reach out to founders@trychannel3.com."
+                      "detail": "API key was provided but is invalid. Need help? Reach out to support@trychannel3.com."
                     }
                   }
                 }
@@ -154,6 +154,65 @@
         ]
       }
     },
+    "/v0/health": {
+      "get": {
+        "tags": [
+          "channel3-api"
+        ],
+        "summary": "Health Check",
+        "description": "Health check endpoint.",
+        "operationId": "health_check_v0_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Health Check V0 Health Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "detail": [
+                    {
+                      "loc": [
+                        "body",
+                        "query"
+                      ],
+                      "msg": "field required",
+                      "type": "value_error.missing"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "detail": "Internal Server Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v0/products/{product_id}": {
       "get": {
         "tags": [
@@ -197,13 +256,13 @@
                   "missing_key": {
                     "summary": "Missing API Key",
                     "value": {
-                      "detail": "Unauthorized. Missing authentication key. Make sure to attach an x-api-key with your request. Need help? Reach out to founders@trychannel3.com."
+                      "detail": "Unauthorized. Missing authentication key. Make sure to attach an x-api-key with your request. Need help? Reach out to support@trychannel3.com."
                     }
                   },
                   "invalid_key": {
                     "summary": "Invalid API Key",
                     "value": {
-                      "detail": "API key was provided but is invalid. Need help? Reach out to founders@trychannel3.com."
+                      "detail": "API key was provided but is invalid. Need help? Reach out to support@trychannel3.com."
                     }
                   }
                 },
@@ -340,13 +399,13 @@
                   "missing_key": {
                     "summary": "Missing API Key",
                     "value": {
-                      "detail": "Unauthorized. Missing authentication key. Make sure to attach an x-api-key with your request. Need help? Reach out to founders@trychannel3.com."
+                      "detail": "Unauthorized. Missing authentication key. Make sure to attach an x-api-key with your request. Need help? Reach out to support@trychannel3.com."
                     }
                   },
                   "invalid_key": {
                     "summary": "Invalid API Key",
                     "value": {
-                      "detail": "API key was provided but is invalid. Need help? Reach out to founders@trychannel3.com."
+                      "detail": "API key was provided but is invalid. Need help? Reach out to support@trychannel3.com."
                     }
                   }
                 },
@@ -475,13 +534,13 @@
                   "missing_key": {
                     "summary": "Missing API Key",
                     "value": {
-                      "detail": "Unauthorized. Missing authentication key. Make sure to attach an x-api-key with your request. Need help? Reach out to founders@trychannel3.com."
+                      "detail": "Unauthorized. Missing authentication key. Make sure to attach an x-api-key with your request. Need help? Reach out to support@trychannel3.com."
                     }
                   },
                   "invalid_key": {
                     "summary": "Invalid API Key",
                     "value": {
-                      "detail": "API key was provided but is invalid. Need help? Reach out to founders@trychannel3.com."
+                      "detail": "API key was provided but is invalid. Need help? Reach out to support@trychannel3.com."
                     }
                   }
                 },
@@ -573,7 +632,7 @@
           "channel3-api"
         ],
         "summary": "Enrich Product Url",
-        "description": "Search by product URL, get back full product information from Channel3\u2019s product database.",
+        "description": "Search by product URL, get back full product information from Channel3’s product database.",
         "operationId": "enrich_product_url_v0_enrich_post",
         "requestBody": {
           "content": {
@@ -591,7 +650,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/EnrichedProduct"
+                  "$ref": "#/components/schemas/ProductDetail"
                 }
               }
             }
@@ -607,13 +666,13 @@
                   "missing_key": {
                     "summary": "Missing API Key",
                     "value": {
-                      "detail": "Unauthorized. Missing authentication key. Make sure to attach an x-api-key with your request. Need help? Reach out to founders@trychannel3.com."
+                      "detail": "Unauthorized. Missing authentication key. Make sure to attach an x-api-key with your request. Need help? Reach out to support@trychannel3.com."
                     }
                   },
                   "invalid_key": {
                     "summary": "Invalid API Key",
                     "value": {
-                      "detail": "API key was provided but is invalid. Need help? Reach out to founders@trychannel3.com."
+                      "detail": "API key was provided but is invalid. Need help? Reach out to support@trychannel3.com."
                     }
                   }
                 }
@@ -720,6 +779,36 @@
   },
   "components": {
     "schemas": {
+      "ApiPhotoQuality": {
+        "type": "string",
+        "enum": [
+          "professional",
+          "ugc",
+          "poor"
+        ],
+        "title": "ApiPhotoQuality",
+        "description": "Photo quality classification for API responses.\nNote: This enum is decoupled from internal ImageIntelligence types as they may diverge."
+      },
+      "ApiProductImageType": {
+        "type": "string",
+        "enum": [
+          "hero",
+          "lifestyle",
+          "on_model",
+          "detail",
+          "scale_reference",
+          "angle_view",
+          "flat_lay",
+          "in_use",
+          "packaging",
+          "size_chart",
+          "color_swatch",
+          "product_information",
+          "merchant_information"
+        ],
+        "title": "ApiProductImageType",
+        "description": "Product image type classification for API responses.\nNote: This enum is decoupled from internal ImageIntelligence types as they may diverge."
+      },
       "AvailabilityStatus": {
         "type": "string",
         "enum": [
@@ -770,7 +859,7 @@
             "type": "number",
             "title": "Best Commission Rate",
             "description": "The maximum commission rate for the brand, as a percentage",
-            "default": 0
+            "default": 0.0
           }
         },
         "type": "object",
@@ -794,19 +883,74 @@
         ],
         "title": "EnrichRequest"
       },
-      "EnrichedProduct": {
+      "ErrorResponse": {
+        "properties": {
+          "detail": {
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "required": [
+          "detail"
+        ],
+        "title": "ErrorResponse"
+      },
+      "Price": {
+        "properties": {
+          "price": {
+            "type": "number",
+            "title": "Price",
+            "description": "The current price of the product, including any discounts."
+          },
+          "compare_at_price": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Compare At Price",
+            "description": "The original price of the product before any discounts."
+          },
+          "currency": {
+            "type": "string",
+            "title": "Currency",
+            "description": "The currency code of the product, like USD, EUR, GBP, etc."
+          }
+        },
+        "type": "object",
+        "required": [
+          "price",
+          "currency"
+        ],
+        "title": "Price"
+      },
+      "Product-Input": {
         "properties": {
           "id": {
             "type": "string",
             "title": "Id"
           },
+          "url": {
+            "type": "string",
+            "title": "Url"
+          },
           "title": {
             "type": "string",
             "title": "Title"
           },
-          "url": {
-            "type": "string",
-            "title": "Url"
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
           },
           "brand_id": {
             "anyOf": [
@@ -831,21 +975,33 @@
             "title": "Brand Name"
           },
           "image_urls": {
-            "anyOf": [
-              {
-                "items": {
-                  "type": "string"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Image Urls"
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Image Urls",
+            "description": "List of image URLs (deprecated, use images field)",
+            "default": [],
+            "deprecated": true
+          },
+          "images": {
+            "items": {
+              "$ref": "#/components/schemas/ProductImage"
+            },
+            "type": "array",
+            "title": "Images",
+            "default": []
           },
           "price": {
             "$ref": "#/components/schemas/Price"
+          },
+          "categories": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Categories",
+            "default": []
           },
           "availability": {
             "$ref": "#/components/schemas/AvailabilityStatus"
@@ -901,71 +1057,36 @@
             "type": "array",
             "title": "Variants",
             "default": []
+          },
+          "score": {
+            "type": "integer",
+            "title": "Score"
+          },
+          "image_url": {
+            "type": "string",
+            "title": "Image Url",
+            "description": "Main product image (deprecated, use images field)",
+            "deprecated": true
           }
         },
         "type": "object",
         "required": [
           "id",
-          "title",
           "url",
+          "title",
           "price",
-          "availability"
+          "availability",
+          "score",
+          "image_url"
         ],
-        "title": "EnrichedProduct"
+        "title": "Product",
+        "description": "A search result that includes product details and a relevance score."
       },
-      "ErrorResponse": {
-        "properties": {
-          "detail": {
-            "title": "Detail"
-          }
-        },
-        "type": "object",
-        "required": [
-          "detail"
-        ],
-        "title": "ErrorResponse"
-      },
-      "Price": {
-        "properties": {
-          "price": {
-            "type": "number",
-            "title": "Price",
-            "description": "The current price of the product, including any discounts."
-          },
-          "compare_at_price": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Compare At Price",
-            "description": "The original price of the product before any discounts."
-          },
-          "currency": {
-            "type": "string",
-            "title": "Currency",
-            "description": "The currency code of the product, like USD, EUR, GBP, etc."
-          }
-        },
-        "type": "object",
-        "required": [
-          "price",
-          "currency"
-        ],
-        "title": "Price"
-      },
-      "Product": {
+      "Product-Output": {
         "properties": {
           "id": {
             "type": "string",
             "title": "Id"
-          },
-          "score": {
-            "type": "integer",
-            "title": "Score"
           },
           "url": {
             "type": "string",
@@ -986,13 +1107,45 @@
             ],
             "title": "Description"
           },
+          "brand_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Brand Id"
+          },
           "brand_name": {
-            "type": "string",
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Brand Name"
           },
-          "image_url": {
-            "type": "string",
-            "title": "Image Url"
+          "image_urls": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Image Urls",
+            "description": "List of image URLs (deprecated, use images field)",
+            "default": [],
+            "deprecated": true
+          },
+          "images": {
+            "items": {
+              "$ref": "#/components/schemas/ProductImage"
+            },
+            "type": "array",
+            "title": "Images",
+            "default": []
           },
           "price": {
             "$ref": "#/components/schemas/Price"
@@ -1008,6 +1161,50 @@
           "availability": {
             "$ref": "#/components/schemas/AvailabilityStatus"
           },
+          "gender": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "male",
+                  "female",
+                  "unisex"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Gender"
+          },
+          "materials": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Materials"
+          },
+          "key_features": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Key Features"
+          },
           "variants": {
             "items": {
               "$ref": "#/components/schemas/Variant"
@@ -1015,21 +1212,30 @@
             "type": "array",
             "title": "Variants",
             "default": []
+          },
+          "score": {
+            "type": "integer",
+            "title": "Score"
+          },
+          "image_url": {
+            "type": "string",
+            "title": "Image Url",
+            "description": "Main product image (deprecated, use images field)",
+            "deprecated": true
           }
         },
         "type": "object",
         "required": [
           "id",
-          "score",
           "url",
           "title",
-          "brand_name",
-          "image_url",
           "price",
-          "availability"
+          "availability",
+          "score",
+          "image_url"
         ],
         "title": "Product",
-        "description": "A product"
+        "description": "A search result that includes product details and a relevance score."
       },
       "ProductDetail": {
         "properties": {
@@ -1084,6 +1290,16 @@
             },
             "type": "array",
             "title": "Image Urls",
+            "description": "List of image URLs (deprecated, use images field)",
+            "default": [],
+            "deprecated": true
+          },
+          "images": {
+            "items": {
+              "$ref": "#/components/schemas/ProductImage"
+            },
+            "type": "array",
+            "title": "Images",
             "default": []
           },
           "price": {
@@ -1164,6 +1380,56 @@
         "title": "ProductDetail",
         "description": "A product with detailed information"
       },
+      "ProductImage": {
+        "properties": {
+          "url": {
+            "type": "string",
+            "title": "Url"
+          },
+          "is_main_image": {
+            "type": "boolean",
+            "title": "Is Main Image",
+            "default": false
+          },
+          "shot_type": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ApiProductImageType"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "photo_quality": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ApiPhotoQuality"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "alt_text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Alt Text"
+          }
+        },
+        "type": "object",
+        "required": [
+          "url"
+        ],
+        "title": "ProductImage",
+        "description": "Product image with metadata"
+      },
       "RedirectMode": {
         "type": "string",
         "enum": [
@@ -1181,12 +1447,6 @@
             "title": "Enrich Query",
             "description": "If True, search will use AI to enrich the query, for example pulling the gender, brand, and price range from the query.",
             "default": true
-          },
-          "monetizable_only": {
-            "type": "boolean",
-            "title": "Monetizable Only",
-            "description": "If True, search will only consider products that offer commission.",
-            "default": false
           },
           "redirect_mode": {
             "anyOf": [
@@ -1284,6 +1544,28 @@
             ],
             "title": "Condition",
             "description": "Filter by product condition. Incubating: condition data is currently incomplete; products without condition data will be included in all condition filter results."
+          },
+          "age": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "newborn",
+                    "infant",
+                    "toddler",
+                    "kids",
+                    "adult"
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Age",
+            "description": "Filter by age group. Age-agnostic products are treated as adult products."
           },
           "price": {
             "anyOf": [
@@ -1420,8 +1702,7 @@
             "$ref": "#/components/schemas/SearchConfig",
             "description": "Optional configuration",
             "default": {
-              "enrich_query": true,
-              "monetizable_only": false
+              "enrich_query": true
             }
           },
           "context": {
@@ -1477,7 +1758,7 @@
             "type": "number",
             "title": "Best Commission Rate",
             "description": "The maximum commission rate for the website, as a percentage",
-            "default": 0
+            "default": 0.0
           }
         },
         "type": "object",
