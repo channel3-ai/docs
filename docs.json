@@ -2,7 +2,6 @@
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
   "name": "Channel3",
-  "openapi": "https://app.stainless.com/api/spec/documented/public-sdk/openapi.documented.yml",
   "api": {
     "examples": {
       "languages": ["python", "typescript", "curl"]
@@ -30,23 +29,24 @@
       },
       {
         "group": "API",
+        "openapi": "https://app.stainless.com/api/spec/documented/public-sdk/openapi.documented.yml",
         "pages": [
           {
             "group": "Product",
             "pages": [
-              "api-reference/endpoint/search",
-              "api-reference/endpoint/product-detail",
-              "api-reference/endpoint/enrich"
+              "POST /v0/search",
+              "GET /v0/products/{product_id}",
+              "POST /v0/enrich"
             ]
           },
           {
             "group": "Brands",
-            "pages": ["api-reference/endpoint/brands"]
+            "pages": ["GET /v0/brands"]
           },
           "categories",
           {
             "group": "Websites",
-            "pages": ["api-reference/endpoint/websites"]
+            "pages": ["GET /v0/websites"]
           },
           "pricing"
         ]
