@@ -4,7 +4,7 @@
   "name": "Channel3",
   "api": {
     "examples": {
-      "languages": ["python", "typescript", "curl"]
+      "languages": ["python", "javascript", "curl"]
     }
   },
   "colors": {
@@ -14,7 +14,7 @@
   },
   "favicon": "/favicon.svg",
   "languages": [
-    { "label": "TypeScript", "syntax": "typescript" },
+    { "label": "JavaScript", "syntax": "javascript" },
     { "label": "Python", "syntax": "python" }
   ],
 
