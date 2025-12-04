@@ -48,6 +48,16 @@
             "group": "Websites",
             "pages": ["GET /v0/websites"]
           },
+          {
+            "group": "Price Tracking",
+            "pages": [
+              "POST /v0/price-tracking/start",
+              "POST /v0/price-tracking/stop",
+              "GET /v0/price-tracking/history/{canonical_product_id}",
+              "GET /v0/price-tracking/subscriptions",
+              "price-tracking-webhooks"
+            ]
+          },
           "pricing"
         ]
       },
